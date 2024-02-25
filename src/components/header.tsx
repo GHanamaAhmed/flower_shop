@@ -4,8 +4,15 @@ import React from "react";
 
 export default function Header() {
   return (
-    <header className="bg-main-color text-white flex justify-around">
-      <ul className="flex gap-3">
+    <header className="bg-main-color text-white flex items-center justify-around py-5">
+      <Image
+        className="md:hidden"
+        src="/icons/clarity_user-line.svg"
+        alt="cart"
+        width={20}
+        height={20}
+      />
+      <ul className="gap-5 hidden md:flex">
         <li>
           <Link href="/">shop</Link>
         </li>
@@ -19,22 +26,36 @@ export default function Header() {
           <Link href="/">Guide</Link>
         </li>
       </ul>
-      <h1>D</h1>
-      <ul className="flex">
+      <h1 className="font-bold text-2xl">D</h1>
+      <ul className="flex gap-3 items-center">
+        <li className="hidden md:block">
+          <Image
+            src="/icons/clarity_user-line.svg"
+            alt="cart"
+            width={20}
+            height={20}
+          />
+        </li>
         <li>
           <Image
-            src="/images/clarity_shopping-cart-line.svg"
+            src="/icons/clarity_shopping-cart-line.svg"
             alt="cart"
             width={20}
             height={20}
           />
+        </li>
+        <li>
           <Image
-            src="/images/clarity_user-line.svg"
+            src="/icons/clarity_search-line.svg"
             alt="cart"
             width={20}
             height={20}
           />
-          <Image src="/images/Vector.svg" alt="cart" width={20} height={20} />
+        </li>
+        <li className="flex flex-col gap-1">
+              <div className="w-5 h-0.5 bg-white"></div>
+              <div className="w-5 h-0.5 bg-white"></div>
+              <div className="w-5 h-0.5 bg-white"></div>
         </li>
       </ul>
     </header>
