@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { Aclonica } from "next/font/google";
-import FlowerCard from "@/components/flowerCard";
+import FlowerCard from "@/components/flowers/flowerCard";
+import Flower from "@/components/flowers/flower";
+import Stand from "@/components/stands/stand";
 const AclonicaSans = Aclonica({ subsets: ["latin"], weight: "400" });
 export default function Home() {
   return (
@@ -69,9 +71,8 @@ export default function Home() {
           </p>
         </div>
       </section>
-      <section>
-        <FlowerCard />
-      </section>
+      <Flower />
+      <Stand/>
     </main>
   );
 }

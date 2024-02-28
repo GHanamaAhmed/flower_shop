@@ -59,7 +59,7 @@ export default async function Header() {
         <li>
           <Image
             src="/icons/clarity_search-line.svg"
-            alt="cart"
+            alt="search"
             width={20}
             height={20}
           />
