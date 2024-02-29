@@ -29,7 +29,7 @@ export default async function Header() {
           <Link href="/">Guide</Link>
         </li>
       </ul>
-      <h1 className="font-bold text-2xl">D</h1>
+      <Link href={"/"} className="font-bold text-2xl">D</Link>
       <ul className="flex gap-3 items-center">
         <li className="hidden md:block">
           {session?.user ? (

@@ -66,7 +66,7 @@ export default function Footer() {
           <Link href={""}>Site Map</Link>
         </li>
       </ul>
-      <ul className="hidden md:flex md:flex-col">
+      <ul className="hidden md:flex md:flex-col items-center">
         <li>
           <Link href={""}>Shop</Link>
         </li>
@@ -80,7 +80,7 @@ export default function Footer() {
           <Link href={""}>Guide</Link>
         </li>
       </ul>
-      <ul className="hidden md:flex md:flex-col justify-between">
+      <ul className="hidden md:flex md:flex-col md:items-center justify-between">
         <li>
           <Link href={""}>
             <Image
@@ -112,7 +112,7 @@ export default function Footer() {
           </Link>
         </li>
       </ul>
-      <div className="col-span-2 row-span-1 flex justify-between self-end">
+      <div className="col-span-2 row-span-1 md:col-span-3 flex justify-between self-end">
         <p>© 2021 All Rights Reserved</p>
         <p>+1 800 854-36-80</p>
       </div>

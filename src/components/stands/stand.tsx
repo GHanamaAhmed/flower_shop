@@ -1,13 +1,14 @@
 import React from "react";
-import Swiper from "../swiper";
+import Swiper from "@/components/swiper";
 import FlowerCard from "../flowers/flowerCard";
+import Link from "next/link";
 
 export default function Stand() {
   return (
     <section className="flex items-center flex-col gap-3 py-4">
       <div className="w-10/12  flex justify-between">
         <h1 className="text-xl md:text-2xl text-main-color">Plant stands</h1>
-        <p>view all</p>
+        <Link href={""}>view all</Link>
       </div>
       <div className="relative w-full  md:w-11/12">
         <Swiper

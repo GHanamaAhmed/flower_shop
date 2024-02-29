@@ -8,7 +8,7 @@ export default function Search({ className }: { className: string }) {
     <div className={"flex justify-between gap-2 " + className}>
       <div className="flex items-center justify-center px-2">
         <Dropdown>
-          <MenuButton className="relative p-0 h-5 w-5 md:h-7 md:w-7 border-none">
+          <MenuButton className="relative p-0 h-5 w-5 md:h-7 md:w-7 border-none hover:bg-inherit cursor-pointer" >
             <Image fill src={"/icons/parameters.svg"} alt="paramrters" />
           </MenuButton>
           <Menu>
@@ -20,11 +20,11 @@ export default function Search({ className }: { className: string }) {
         className="flex-1 border border-main-color placeholder:text-sm py-1 outline-none px-4 min-w-44"
         placeholder="Search flowers..."
       />
-      <div className="flex items-center justify-center p-2 bg-main-color">
+      <button className="flex items-center justify-center p-2 bg-main-color">
         <div className="relative h-5 w-5 md:h-7 md:w-7">
           <Image fill src="/icons/clarity_search-line.svg" alt="paramrters" />
         </div>
-      </div>
+      </button>
     </div>
   );
 }

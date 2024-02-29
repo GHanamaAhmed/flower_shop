@@ -3,6 +3,8 @@ import { Aclonica } from "next/font/google";
 import FlowerCard from "@/components/flowers/flowerCard";
 import Flower from "@/components/flowers/flower";
 import Stand from "@/components/stands/stand";
+import Link from "next/link";
+import Search from "@/components/search";
 const AclonicaSans = Aclonica({ subsets: ["latin"], weight: "400" });
 export default function Home() {
   return (
@@ -70,7 +72,14 @@ export default function Home() {
           </p>
         </div>
       </section>
-      <Flower />
+      <section className="flex items-center flex-col gap-3">
+        <div className="w-10/12  flex justify-between">
+          <h1 className="text-xl md:text-2xl text-main-color">Flowers</h1>
+          <Link href={""}>view all</Link>
+        </div>
+        <Search className="w-10/12 " />
+        <Flower />
+      </section>
       <Stand />
     </main>
   );
