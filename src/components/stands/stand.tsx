@@ -27,7 +27,8 @@ export default function Stand() {
             <FlowerCard
               className="mx-2 w-[270px] h-[370px] md:w-[300px] md:h-[400px]"
               imgProps={{
-                objectFit:"cover",
+                sizes: "(min-width: 780px) 220px, 200px",
+                objectFit: "cover",
                 fill: true,
                 src: "/images/katsia-jazwinska-y-IwXNMxN_o-unsplash 1.jpg",
                 alt: "cardImg",

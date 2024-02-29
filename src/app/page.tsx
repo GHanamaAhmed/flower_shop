@@ -7,8 +7,8 @@ const AclonicaSans = Aclonica({ subsets: ["latin"], weight: "400" });
 export default function Home() {
   return (
     <main>
-      <section className="md:grid md:grid-cols-2 place-items-center bg-main-color relative text-white-color px-3 md:px-10 py-3 md:pt-10 md:pb-14">
-        <div className="flex flex-col gap-3 md:gap-5">
+      <section className="relative md:grid md:grid-cols-2 place-items-center bg-main-color text-white-color px-3 md:px-10 py-3 md:pt-10 md:pb-14">
+        <div className="z-10 flex flex-col gap-3 md:gap-5">
           <div className={"text-2xl md:text-4xl " + AclonicaSans.className}>
             <p>Happiness</p>
             <p>blooms from</p>
@@ -28,27 +28,26 @@ export default function Home() {
             </button>
           </div>
         </div>
-        <div className="hidden md:block">
-          <Image
-            className="-z-10"
-            height={600}
-            width={300}
-            src={"/images/hero-section-picture.png"}
-            alt="hero-section-picture"
-          />
+        <div className="absolute top-1/3 right-0 -translate-y-1/2 md:translate-y-0 md:static">
+          <div className="relative w-[224px] h-[247px] md:w-[336px] md:h-[370.5px]">
+            <Image
+              sizes="(min-width: 780px) 336px, 224px"
+              fill
+              src={"/images/hero-section-picture.png"}
+              alt="hero-section-picture"
+            />
+          </div>
         </div>
-        <Image
-          className="absolute top-1/3 right-0 -translate-y-1/2 md:hidden"
-          height={400}
-          width={200}
-          src={"/images/hero-section-picture.png"}
-          alt="hero-section-picture"
-        />
       </section>
       <section className="grid grid-cols-2 justify-items-stretch md:py-10">
         <div className="flex justify-center items-center">
           <div className="w-[150px] h-[150px] md:w-72 md:h-72 relative">
-            <Image fill src={"/images/type-flowers.png"} alt="type-flowrs" />
+            <Image
+              sizes="(min-width: 780px) 288px, 150px"
+              fill
+              src={"/images/type-flowers.png"}
+              alt="type-flowrs"
+            />
           </div>
         </div>
         <div className="py-3 px-5 flex flex-col md:gap-5">
@@ -72,7 +71,7 @@ export default function Home() {
         </div>
       </section>
       <Flower />
-      <Stand/>
+      <Stand />
     </main>
   );
 }

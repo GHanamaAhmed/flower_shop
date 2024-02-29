@@ -31,6 +31,7 @@ export default function Flower() {
               name="Peperomia Ginny"
               price="30$"
               imgProps={{
+                sizes:"(min-width: 780px) 220px, 200px",
                 objectFit: "cover",
                 fill: true,
                 src: "/images/katsia-jazwinska-y-IwXNMxN_o-unsplash 1.jpg",
