@@ -66,7 +66,7 @@ export default function Home() {
             <Image
               sizes="(min-width: 780px) 288px, 150px"
               fill
-              src={"/images/type-flowers.png"}
+              src={"/images/type-flowers.webp"}
               alt="type-flowrs"
             />
           </div>
