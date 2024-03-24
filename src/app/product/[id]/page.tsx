@@ -3,8 +3,14 @@ import ProductSwiper from "../_components/productSwiper";
 import Image from "next/image";
 import { Button, Input, Option, Select } from "@mui/joy";
 import Flower from "@/components/flowers/flower";
-const itemsLength = Array.from({ length: 5 });
-const items = itemsLength.map((item, index) => {
+const images = [
+  "katsia-jazwinska-y-IwXNMxN_o-unsplash 12.webp",
+  "katsia-jazwinska-y-IwXNMxN_o-unsplash 1-1.webp",
+  "katsia-jazwinska-y-IwXNMxN_o-unsplash 1 (2).webp",
+  "katsia-jazwinska-y-IwXNMxN_o-unsplash 1.webp",
+  "katsia-jazwinska-y-IwXNMxN_o-unsplash 2.webp",
+];
+const items = images.map((item, index) => {
   return (
     <div
       key={index}
@@ -12,7 +18,7 @@ const items = itemsLength.map((item, index) => {
     >
       <img
         className="object-cover"
-        src={"/images/katsia-jazwinska-y-IwXNMxN_o-unsplash 1.jpg"}
+        src={"/images/"+item}
         alt={`${index}`}
       />
     </div>
@@ -46,8 +52,8 @@ export default function Page({
             className="w-full border border-main-color rounded-none"
             placeholder="Sizes"
           >
-            <Option value="dog">Dog</Option>
-            <Option value="cat">Cat</Option>
+            <Option value="dog">1</Option>
+            <Option value="cat">2</Option>
           </Select>
           <div className="w-full flex justify-between items-center">
             <p className="font-semibold">Quntity</p>

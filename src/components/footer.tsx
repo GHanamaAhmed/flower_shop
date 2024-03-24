@@ -1,9 +1,35 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
+import { animate, inView, motion } from "framer-motion";
 export default function Footer() {
+  useEffect(() => {
+    inView("div , section", ({ target }) => {
+      console.log("In view");
+
+      const animation = animate([target], {
+        opacity: 1,
+        y: 0,
+        transition: {
+          duration: 10,
+        },
+      });
+      return () => animation.stop();
+    });
+  }, []);
   return (
-    <div className="w-full gap-x-2 relative grid grid-cols-2 grid-rows-2 md:grid-cols-3 text-white-color pt-8 pb-3 px-4 md:pt-28">
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      transition={{ duration: 2,delay: 0.5  }}
+      variants={{
+        visible: { opacity: 1, y: 0 },
+        hidden: { opacity: 0, y: 20 },
+      }}
+      className="w-full gap-x-2 relative grid grid-cols-2 grid-rows-2 md:grid-cols-3 text-white-color pt-8 pb-3 px-4 md:pt-28"
+    >
       <svg
         className="absolute w-full h-full -z-10"
         viewBox="0 0"
@@ -116,6 +142,6 @@ export default function Footer() {
         <p>© 2021 All Rights Reserved</p>
         <p>+1 800 854-36-80</p>
       </div>
-    </div>
+    </motion.div>
   );
 }

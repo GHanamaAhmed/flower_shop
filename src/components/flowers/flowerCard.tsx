@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 import { HtmlProps } from "next/dist/shared/lib/html-context.shared-runtime";
 import type { ImageProps } from "next/dist/shared/lib/get-img-props";
+import Link from "next/link";
 type FlowerCardProps = {
   imgProps?: ImageProps;
   name?: string;
@@ -19,7 +20,8 @@ export default function FlowerCard({
 }: FlowerCardProps) {
   const handleDragStart = (e: any) => e.preventDefault();
   return (
-    <div
+    <Link
+      href={"/product/1"}
       onDragStart={handleDragStart}
       className={"flex flex-col gap-1 " + className}
     >
@@ -37,6 +39,6 @@ export default function FlowerCard({
           Add to Card
         </button>
       )}
-    </div>
+    </Link>
   );
 }

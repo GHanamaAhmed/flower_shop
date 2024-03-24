@@ -1,13 +1,29 @@
-import { options } from "@/app/api/auth/[...nextauth]/options";
-import { getServerSession } from "next-auth";
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-
-export default async function Header() {
-  const session = await getServerSession(options);
+import { motion } from "framer-motion";
+import { useSession } from "next-auth/react";
+export default function Header() {
+  const { data: session } = useSession();
   return (
-    <header className="bg-main-color text-white flex items-center justify-around py-5">
+    <motion.header
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      transition={{ duration: 2,delay: 0.5  }}
+      variants={{
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: {
+            duration: 1,
+          },
+        },
+      }}
+      className="bg-main-color text-white flex items-center justify-around py-5"
+    >
       <Image
         className="md:hidden"
         src="/icons/clarity_user-line.svg"
@@ -29,7 +45,9 @@ export default async function Header() {
           <Link href="/">Guide</Link>
         </li>
       </ul>
-      <Link href={"/"} className="font-bold text-2xl">D</Link>
+      <Link href={"/"} className="font-bold text-2xl">
+        D
+      </Link>
       <ul className="flex gap-3 items-center">
         <li className="hidden md:block">
           {session?.user ? (
@@ -70,6 +88,6 @@ export default async function Header() {
           <div className="w-5 h-0.5 bg-white"></div>
         </li>
       </ul>
-    </header>
+    </motion.header>
   );
 }

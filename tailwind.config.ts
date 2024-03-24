@@ -13,6 +13,9 @@ const config: Config = {
         "white-color":"#EFF7F5",
         "black-color":"#1E1E1E",
         "gray-color":"#9C9C9C"
+      },
+      inset: {
+        '10': '15%',
       }
     },
   },

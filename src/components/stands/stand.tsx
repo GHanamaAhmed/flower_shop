@@ -2,7 +2,7 @@ import React from "react";
 import Swiper from "@/components/swiper";
 import FlowerCard from "../flowers/flowerCard";
 import Link from "next/link";
-
+const images = ["image 5.webp", "image 6.webp", "image 7.webp"];
 export default function Stand() {
   return (
     <section className="flex items-center flex-col gap-3 py-4">
@@ -24,19 +24,20 @@ export default function Stand() {
             disableDotsControls: true,
             disableButtonsControls: true,
           }}
-          items={[
+          items={images.map((e, i) => (
             <FlowerCard
+              key={i}
               className="mx-2 w-[270px] h-[370px] md:w-[300px] md:h-[400px]"
               imgProps={{
                 sizes: "(min-width: 780px) 220px, 200px",
                 objectFit: "cover",
                 fill: true,
-                src: "/images/katsia-jazwinska-y-IwXNMxN_o-unsplash 1.jpg",
+                src: "/images/" + e,
                 alt: "cardImg",
                 role: "presentation",
               }}
-            />,
-          ]}
+            />
+          ))}
         />
       </div>
     </section>

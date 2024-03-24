@@ -19,10 +19,11 @@ const thumbItems: ThumbItemsProps = (
 ) => {
   return items?.map((item: React.ReactNode, i: number) => (
     <div
-      className="thumb w-20 h-20 mx-3 flex border justify-center items-center "
+      key={i}
+      className="thumb w-20 h-20 md:h-32 md:w-32 mx-3 flex border justify-center items-center "
       onClick={() => (setThumbIndex(i), setThumbAnimation(true))}
     >
-      {i + 1}
+      {item}
     </div>
   ));
 };
@@ -37,7 +38,6 @@ export default function ProductSwiper({ items }: ProductSwiperProps) {
   const [thumbs] = useState(
     thumbItems(items, [setThumbIndex, setThumbAnimation])
   );
-
 
   const syncMainBeforeChange = (e: any) => {
     setMainAnimation(true);
@@ -65,6 +65,7 @@ export default function ProductSwiper({ items }: ProductSwiperProps) {
 
   return [
     <AliceCarousel
+      key={0}
       activeIndex={mainIndex}
       animationType="fadeout"
       animationDuration={800}
@@ -77,7 +78,7 @@ export default function ProductSwiper({ items }: ProductSwiperProps) {
       onSlideChanged={syncMainAfterChange}
       touchTracking={!thumbAnimation}
     />,
-    <div className="thumbs">
+    <div key={1} className="thumbs mt-3">
       <AliceCarousel
         activeIndex={thumbIndex}
         autoWidth
