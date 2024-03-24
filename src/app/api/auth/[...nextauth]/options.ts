@@ -13,8 +13,8 @@ export const options: NextAuthOptions = {
           image: profile.avatar_url,
         };
       },
-      clientId: "d3cde04da0e432268a18",
-      clientSecret: "6e77fa77c461cc77a883589124993dfed499e500",
+      clientId: process.env.GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     }),
     CredentialsProvider({
       name: "credentials",
