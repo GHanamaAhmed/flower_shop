@@ -2,54 +2,90 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { motion } from "framer-motion";
+import { Variants, motion } from "framer-motion";
 import { useSession } from "next-auth/react";
+const variants: Variants = {
+  right: {
+    opacity: 0,
+    translateX: "100%",
+  },
+  left: {
+    opacity: 0,
+    translateX: "-100%",
+  },
+  hide: {
+    opacity: 0,
+  },
+  center: {
+    opacity: 1,
+    translateX: 0,
+    transition: {
+      duration: 1,
+    },
+  },
+};
 export default function Header() {
   const { data: session } = useSession();
   return (
-    <motion.header
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      transition={{ duration: 2,delay: 0.5  }}
-      variants={{
-        hidden: { opacity: 0, y: 20 },
-        visible: {
-          opacity: 1,
-          y: 0,
-          transition: {
-            duration: 1,
-          },
-        },
-      }}
-      className="bg-main-color text-white flex items-center justify-around py-5"
-    >
-      <Image
-        className="md:hidden"
-        src="/icons/clarity_user-line.svg"
-        alt="cart"
-        width={20}
-        height={20}
-      />
-      <ul className="gap-5 hidden md:flex">
-        <li>
+    <motion.header className="bg-main-color text-white flex items-center justify-around py-5">
+      <motion.span
+        initial="left"
+        whileInView="center"
+        variants={variants}
+        viewport={{ once: true }}
+      >
+        <Image
+          className="md:hidden"
+          src="/icons/clarity_user-line.svg"
+          alt="cart"
+          width={20}
+          height={20}
+        />
+      </motion.span>
+      <motion.ul
+        initial="right"
+        whileInView="center"
+        viewport={{ once: true }}
+        transition={{
+          staggerChildren: 0.4,
+          delayChildren: 0.5,
+        }}
+        className="gap-5 hidden md:flex"
+      >
+        <motion.li variants={variants}>
           <Link href="/">shop</Link>
-        </li>
-        <li>
+        </motion.li>
+        <motion.li variants={variants}>
           <Link href="/">products</Link>
-        </li>
-        <li>
+        </motion.li>
+        <motion.li variants={variants}>
           <Link href="/">Fertilizer</Link>
-        </li>
-        <li>
+        </motion.li>
+        <motion.li variants={variants}>
           <Link href="/">Guide</Link>
-        </li>
-      </ul>
-      <Link href={"/"} className="font-bold text-2xl">
-        D
-      </Link>
-      <ul className="flex gap-3 items-center">
-        <li className="hidden md:block">
+        </motion.li>
+      </motion.ul>
+      <motion.span
+        initial="hide"
+        whileInView="center"
+        variants={variants}
+        viewport={{ once: true }}
+      >
+        <Link href={"/"} className="font-bold text-2xl">
+          D
+        </Link>
+      </motion.span>
+      <motion.ul
+        initial="left"
+        whileInView="center"
+        viewport={{ once: true }}
+        transition={{
+          staggerChildren: 0.4,
+          delayChildren: 0.5,
+        }}
+        className="flex gap-3 items-center"
+      >
+        <motion.li variants={variants} className="hidden md:block">
           {session?.user ? (
             <Image
               src="/icons/clarity_user-line.svg"
@@ -65,29 +101,29 @@ export default function Header() {
               Login
             </Link>
           )}
-        </li>
-        <li>
+        </motion.li>
+        <motion.li variants={variants}>
           <Image
             src="/icons/clarity_shopping-cart-line.svg"
             alt="cart"
             width={20}
             height={20}
           />
-        </li>
-        <li>
+        </motion.li>
+        <motion.li variants={variants}>
           <Image
             src="/icons/clarity_search-line.svg"
             alt="search"
             width={20}
             height={20}
           />
-        </li>
-        <li className="flex flex-col gap-1">
+        </motion.li>
+        <motion.li variants={variants}>
           <div className="w-5 h-0.5 bg-white"></div>
           <div className="w-5 h-0.5 bg-white"></div>
           <div className="w-5 h-0.5 bg-white"></div>
-        </li>
-      </ul>
+        </motion.li>
+      </motion.ul>
     </motion.header>
   );
 }
