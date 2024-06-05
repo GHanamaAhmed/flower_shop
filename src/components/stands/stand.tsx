@@ -1,16 +1,58 @@
+"use client";
 import React from "react";
 import Swiper from "@/components/swiper";
 import FlowerCard from "../flowers/flowerCard";
 import Link from "next/link";
+import { motion, useAnimation, useInView, Variants } from "framer-motion";
+import { useEffect, useRef } from "react";
 const images = ["image 5.webp", "image 6.webp", "image 7.webp"];
+const textVariants: Variants = {
+  hide: {
+    opacity: 0,
+    translateX: "100%",
+  },
+  show: {
+    scale: 1,
+    opacity: 1,
+    translateX: 0,
+    transition: {
+      duration: 1,
+    },
+  },
+};
+
 export default function Stand() {
+  const mainControle = useAnimation();
+  const containerRef = useRef(null);
+  const containerInView = useInView(containerRef, { once: true, amount: 0.8 });
+  useEffect(() => {
+    if (containerInView) {
+      mainControle.start("show");
+    }
+  }, [containerInView]);
   return (
-    <section className="flex items-center flex-col gap-3 py-4">
+    <motion.section
+      ref={containerRef}
+      initial="hide"
+      animate={mainControle}
+      transition={{ staggerChildren: 0.4, delayChildren: 0.5 }}
+      className="flex items-center flex-col gap-3 py-4"
+    >
       <div className="w-10/12  flex justify-between">
-        <h1 className="text-xl md:text-2xl text-main-color">Plant stands</h1>
-        <Link href={""}>view all</Link>
+        <motion.h1
+          variants={textVariants}
+          className="text-xl md:text-2xl text-main-color"
+        >
+          Plant stands
+        </motion.h1>
+        <motion.span variants={textVariants}>
+          <Link href={""}>view all</Link>
+        </motion.span>
       </div>
-      <div className="relative w-full  md:w-11/12">
+      <motion.div
+        variants={textVariants}
+        className="relative w-full  md:w-11/12"
+      >
         <Swiper
           AliceCarouselProps={{
             responsive: {
@@ -39,7 +81,7 @@ export default function Stand() {
             />
           ))}
         />
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 }

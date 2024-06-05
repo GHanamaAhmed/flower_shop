@@ -118,7 +118,7 @@ export default function Header() {
             height={20}
           />
         </motion.li>
-        <motion.li variants={variants}>
+        <motion.li variants={variants} className="flex flex-col gap-1">
           <div className="w-5 h-0.5 bg-white"></div>
           <div className="w-5 h-0.5 bg-white"></div>
           <div className="w-5 h-0.5 bg-white"></div>

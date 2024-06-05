@@ -20,8 +20,8 @@ export default async function RootLayout({
 }>) {
   const session = await getServerSession(options);
   return (
-    <html lang="en">
-      <body className={DMSans.className}>
+    <html lang="en" className="overflow-x-hidden">
+      <body className={DMSans.className + " overflow-hidden"}>
         <SessionProvider session={session}>
           <Header />
           {children}
