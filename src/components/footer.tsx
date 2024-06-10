@@ -19,16 +19,16 @@ export default function Footer() {
     });
   }, []);
   return (
-    <motion.div
+    <motion.footer
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
-      transition={{ duration: 2,delay: 0.5  }}
+      transition={{ duration: 2, delay: 0.5 }}
       variants={{
         visible: { opacity: 1, y: 0 },
         hidden: { opacity: 0, y: 20 },
       }}
-      className="w-full gap-x-2 relative grid grid-cols-2 grid-rows-2 md:grid-cols-3 text-white-color pt-8 pb-3 px-4 md:pt-28"
+      className="w-full gap-x-2 relative grid grid-cols-2 grid-rows-2 md:grid-cols-3 text-white-color pt-8 pb-3 px-4 md:px-24 md:pt-28"
     >
       <svg
         className="absolute w-full h-full -z-10"
@@ -40,9 +40,9 @@ export default function Footer() {
           fill="#004F44"
         />
       </svg>
-      <div className="row-span-1 flex flex-col gap-2">
+      <div className="row-span-1 flex flex-col gap-4">
         <h2 className="font-bold text-2xl">Dev</h2>
-        <button className="rounded-md px-3 py-2 bg-white-color text-main-color">
+        <button className="rounded-md w-fit px-7 py-2 bg-white-color text-main-color">
           Contact Us
         </button>
         <ul className="flex justify-between gap-3 w-fit">
@@ -78,7 +78,7 @@ export default function Footer() {
           </li>
         </ul>
       </div>
-      <ul className="md:hidden">
+      <ul className="md:hidden flex flex-col justify-center gap-2">
         <li>
           <Link href={""}>Terms of Use</Link>
         </li>
@@ -92,7 +92,7 @@ export default function Footer() {
           <Link href={""}>Site Map</Link>
         </li>
       </ul>
-      <ul className="hidden md:flex md:flex-col items-center">
+      <ul className="hidden md:flex md:flex-col justify-center pl-4">
         <li>
           <Link href={""}>Shop</Link>
         </li>
@@ -142,6 +142,6 @@ export default function Footer() {
         <p>© 2021 All Rights Reserved</p>
         <p>+1 800 854-36-80</p>
       </div>
-    </motion.div>
+    </motion.footer>
   );
 }
