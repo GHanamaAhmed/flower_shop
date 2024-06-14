@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Variants, motion } from "framer-motion";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import {
   Avatar,
   Button,
@@ -127,15 +127,11 @@ export default function Header() {
                   height={20}
                 />
               </MenuButton>
-              <Menu placement="bottom-end" className="bg-transparent border-none">
-                {/* <MenuItem className="flex gap-2 items-center">
-                  <Avatar alt="User Photo" src={session.user.image||""}/>
-                  <div className="flex flex-col gap-2">
-                    <p>{session.user.email}</p>
-                    <p>{session.user.name}</p>
-                  </div>
-                </MenuItem> */}
-                <Card variant="solid" color="success" invertedColors>
+              <Menu
+                placement="bottom-end"
+                className="bg-transparent border-none"
+              >
+                <Card variant="solid" color="warning" invertedColors>
                   <CardContent>
                     <Stack
                       direction={"row"}
@@ -153,7 +149,12 @@ export default function Header() {
                     </Stack>
                   </CardContent>
                   <CardActions>
-                    <Button variant="outlined" color="danger" size="sm">
+                    <Button
+                      onClick={() => signOut()}
+                      variant="outlined"
+                      color="danger"
+                      size="sm"
+                    >
                       Sign Out
                     </Button>
                   </CardActions>

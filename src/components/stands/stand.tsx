@@ -5,7 +5,7 @@ import FlowerCard from "../flowers/flowerCard";
 import Link from "next/link";
 import { motion, useAnimation, useInView, Variants } from "framer-motion";
 import { useEffect, useRef } from "react";
-const images = ["image 5.webp", "image 6.webp", "image 7.webp"];
+import { Prisma, Product } from "@prisma/client";
 const textVariants: Variants = {
   hide: {
     opacity: 0,
@@ -20,8 +20,21 @@ const textVariants: Variants = {
     },
   },
 };
+const options = {
+  prices: true,
+  thumbnail: true,
+  productCategories: {
+    select: {
+      category: true,
+    },
+  },
+};
 
-export default function Stand() {
+export default function Stand({
+  initialData,
+}: {
+  initialData: Prisma.ProductGetPayload<{ include: typeof options }>[];
+}) {
   const mainControle = useAnimation();
   const containerRef = useRef(null);
   const containerInView = useInView(containerRef, { once: true, amount: 0.8 });
@@ -46,7 +59,7 @@ export default function Stand() {
           Plant stands
         </motion.h1>
         <motion.span variants={textVariants}>
-          <Link href={""}>view all</Link>
+          <Link href={"/stands/1"}>view all</Link>
         </motion.span>
       </div>
       <motion.div
@@ -66,15 +79,17 @@ export default function Stand() {
             disableDotsControls: true,
             disableButtonsControls: true,
           }}
-          items={images.map((e, i) => (
+          items={initialData.map((e, i) => (
             <FlowerCard
               key={i}
               className="mx-2 w-[270px] h-[370px] md:w-[300px] md:h-[400px]"
+              name={e.name}
+              price={e.prices[0].price + "$"}
               imgProps={{
                 sizes: "(min-width: 780px) 220px, 200px",
                 objectFit: "cover",
                 fill: true,
-                src: "/images/" + e,
+                src: e.thumbnail.url,
                 alt: "cardImg",
                 role: "presentation",
               }}

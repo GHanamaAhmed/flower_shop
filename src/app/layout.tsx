@@ -6,6 +6,7 @@ import Footer from "@/components/footer";
 import { SessionProvider } from "@/components/session/sessionProvider";
 import { options } from "@/app/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
+import MuiTheme from "@/components/muiTheme";
 const DMSans = DM_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,13 +22,15 @@ export default async function RootLayout({
   const session = await getServerSession(options);
   return (
     <html lang="en" className="overflow-x-hidden">
-      <body className={DMSans.className + " overflow-hidden"}>
-        <SessionProvider session={session}>
-          <Header />
-          {children}
-          <Footer />
-        </SessionProvider>
-      </body>
+      <MuiTheme>
+        <body className={DMSans.className + " overflow-hidden"}>
+          <SessionProvider session={session}>
+            <Header />
+            {children}
+            <Footer />
+          </SessionProvider>
+        </body>
+      </MuiTheme>
     </html>
   );
 }

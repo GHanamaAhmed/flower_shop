@@ -13,9 +13,11 @@ model User {
   email         String?         @unique
   password      String?
   emailVerified DateTime?
+  role          String          @default("user")
   image         String?
   accounts      Account[]
   sessions      Session[]
+  orders        Order[]
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 
@@ -51,9 +53,8 @@ model Session {
   userId       String   @db.ObjectId
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model VerificationToken {
@@ -79,4 +80,110 @@ model Authenticator {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, credentialID])
+}
+
+model Product {
+  id                String            @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  thumbnailId       String            @db.ObjectId
+  thumbnail         Picture           @relation(fields: [thumbnailId], references: [id], onDelete: Cascade)
+  prices            Price[]
+  description       String            @default("")
+  productCategories ProductCategory[]
+  productInOrders   ProductInOrder[]
+}
+
+model Color {
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  name   String  @unique
+  prices Price[]
+}
+
+model Size {
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  name   String  @unique
+  prices Price[]
+}
+
+model Price {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  productId    String         @db.ObjectId
+  colorId      String         @db.ObjectId
+  sizeId       String         @db.ObjectId
+  quantity     Int
+  price        Int
+  picturePrice PicturePrice[]
+  color        Color          @relation(fields: [colorId], references: [id], onDelete: Restrict)
+  size         Size           @relation(fields: [sizeId], references: [id], onDelete: Restrict)
+  product      Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id                String            @id @default(auto()) @map("_id") @db.ObjectId
+  name              String            @unique
+  productCategories ProductCategory[]
+}
+
+model ProductCategory {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId  String   @db.ObjectId
+  categoryId String   @db.ObjectId
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([categoryId])
+}
+
+model ProductInOrder {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  productId String  @db.ObjectId
+  orderId   String  @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([orderId])
+}
+
+model Order {
+  id            String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String           @db.ObjectId
+  createdAt     DateTime         @default(now())
+  productOrders ProductInOrder[]
+  user          User             @relation(fields: [userId], references: [id], onDelete: NoAction)
+  total         Int
+
+  @@index([userId])
+}
+
+model Checkout {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId String @unique @db.ObjectId
+  userId    String @unique @db.ObjectId
+  orderId   String @unique @db.ObjectId
+}
+
+model ProductInChecout {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  productId  String @db.ObjectId
+  checkoutId String @db.ObjectId
+  quantity   Int
+}
+
+model Picture {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  url          String         @unique
+  picturePrice PicturePrice[]
+  product      Product[]
+}
+
+model PicturePrice {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  priceId   String  @db.ObjectId
+  pictureId String  @db.ObjectId
+  price     Price   @relation(fields: [priceId], references: [id], onDelete: Cascade)
+  picture   Picture @relation(fields: [pictureId], references: [id], onDelete: Cascade)
 }

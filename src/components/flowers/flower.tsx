@@ -1,14 +1,21 @@
 import React from "react";
 import Swiper from "../swiper";
 import FlowerCard from "./flowerCard";
-const images = [
-  "katsia-jazwinska-y-IwXNMxN_o-unsplash 12.webp",
-  "katsia-jazwinska-y-IwXNMxN_o-unsplash 1-1.webp",
-  "katsia-jazwinska-y-IwXNMxN_o-unsplash 1 (2).webp",
-  "katsia-jazwinska-y-IwXNMxN_o-unsplash 1.webp",
-  "katsia-jazwinska-y-IwXNMxN_o-unsplash 2.webp",
-];
-export default function Flower() {
+import { Prisma } from "@prisma/client";
+const options = {
+  prices: true,
+  thumbnail: true,
+  productCategories: {
+    select: {
+      category: true,
+    },
+  },
+};
+export default function Flower({
+  initialData,
+}: {
+  initialData: Prisma.ProductGetPayload<{ include: typeof options }>[];
+}) {
   return (
     <div className="relative w-full">
       <Swiper
@@ -25,17 +32,17 @@ export default function Flower() {
           disableDotsControls: true,
         }}
         navigationButton={true}
-        items={images.map((e, i) => (
+        items={initialData.map((e, i) => (
           <FlowerCard
             key={i}
             className="mx-2 w-[200px] h-[370px] md:w-[220px] md:h-[390px]"
-            name="Peperomia Ginny"
-            price="30$"
+            name={e.name}
+            price={e.prices[0].price + "$"}
             imgProps={{
               sizes: "(min-width: 780px) 220px, 200px",
               objectFit: "cover",
               fill: true,
-              src: "/images/" + e,
+              src: e.thumbnail.url,
               alt: "cardImg",
               role: "presentation",
             }}

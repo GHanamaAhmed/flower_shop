@@ -5,6 +5,7 @@ import Link from "next/link";
 import Search from "@/components/search";
 import { motion, useAnimation, useInView, Variants } from "framer-motion";
 import { useEffect, useRef } from "react";
+import { Prisma, Product } from "@prisma/client";
 const AclonicaSans = Aclonica({ subsets: ["latin"], weight: "400" });
 const textVariants: Variants = {
   hide: {
@@ -20,8 +21,20 @@ const textVariants: Variants = {
     },
   },
 };
-
-export default function Flowers() {
+const options = {
+  prices: true,
+  thumbnail: true,
+  productCategories: {
+    select: {
+      category: true,
+    },
+  },
+};
+export default function Flowers({
+  initialData,
+}: {
+  initialData: Prisma.ProductGetPayload<{ include: typeof options }>;
+}) {
   const mainControle = useAnimation();
   const containerRef = useRef(null);
   const containerInView = useInView(containerRef, { once: true, amount: 0.8 });
@@ -46,20 +59,20 @@ export default function Flowers() {
           Flowers
         </motion.h1>
         <motion.span variants={textVariants}>
-          <Link href={""}>view all</Link>
+          <Link href={"/flowers/1"}>view all</Link>
         </motion.span>
       </div>
-      <motion.span
+      {/* <motion.span
         className="w-full flex justify-center"
         variants={textVariants}
       >
         <Search className="w-10/12 " />
-      </motion.span>
+      </motion.span> */}
       <motion.span
         variants={textVariants}
         className="w-full flex justify-center"
       >
-        <Flower />
+        <Flower initialData={initialData} />
       </motion.span>
     </motion.section>
   );
