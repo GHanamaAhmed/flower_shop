@@ -4,7 +4,7 @@ import Type from "./_components/type";
 import Flowers from "./_components/flowers";
 import { fetchProducts } from "@/lib/api";
 const options = {
-  prices: true,
+  variants: true,
   thumbnail: true,
   productCategories: {
     select: {

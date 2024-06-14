@@ -3,7 +3,7 @@ import Swiper from "../swiper";
 import FlowerCard from "./flowerCard";
 import { Prisma } from "@prisma/client";
 const options = {
-  prices: true,
+  variants: true,
   thumbnail: true,
   productCategories: {
     select: {
@@ -37,7 +37,7 @@ export default function Flower({
             key={i}
             className="mx-2 w-[200px] h-[370px] md:w-[220px] md:h-[390px]"
             name={e.name}
-            price={e.prices[0].price + "$"}
+            price={e.variants[0].price + "$"}
             imgProps={{
               sizes: "(min-width: 780px) 220px, 200px",
               objectFit: "cover",

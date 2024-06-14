@@ -21,7 +21,7 @@ const textVariants: Variants = {
   },
 };
 const options = {
-  prices: true,
+  variants: true,
   thumbnail: true,
   productCategories: {
     select: {
@@ -84,7 +84,7 @@ export default function Stand({
               key={i}
               className="mx-2 w-[270px] h-[370px] md:w-[300px] md:h-[400px]"
               name={e.name}
-              price={e.prices[0].price + "$"}
+              price={e.variants[0].price + "$"}
               imgProps={{
                 sizes: "(min-width: 780px) 220px, 200px",
                 objectFit: "cover",

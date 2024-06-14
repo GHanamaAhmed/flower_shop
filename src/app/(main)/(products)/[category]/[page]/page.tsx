@@ -1,9 +1,12 @@
 import FlowerCard from "@/components/flowers/flowerCard";
 import Pagination from "@/components/pagination";
-import { ProductWithRelations, fetchProducts } from "@/lib/api";
+import { fetchProducts } from "@/lib/api";
 import React from "react";
-import { CategoryEnum } from "../../../../../enums/products";
-
+import { CategoryEnum } from "../../../../../../enums/products";
+const options = {
+  variants: true,
+  thumbnail: true,
+};
 export default async function Page({
   params: { page, category },
   searchParams: { s },
@@ -16,12 +19,13 @@ export default async function Page({
     s: string;
   };
 }) {
-  const products: ProductWithRelations[] = await fetchProducts(
+  const products = await fetchProducts<typeof options>(
     page,
     20,
     s,
     category == CategoryEnum.products ? CategoryEnum.products : category,
-    false
+    false,
+    options
   );
   return (
     <div className="w-11/12 gap-x-2 gap-y-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 justify-items-center py-5  ">
@@ -29,7 +33,7 @@ export default async function Page({
         <FlowerCard
           className="w-[200px] h-[370px] md:w-[220px] md:h-[390px]"
           name={e.name}
-          price={e.prices[0].price + "$"}
+          price={e.variants[0].price + "$"}
           imgProps={{
             sizes: "(min-width: 780px) 220px, 200px",
             objectFit: "cover",

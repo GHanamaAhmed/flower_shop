@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
-import ProductSwiper from "../_components/productSwiper";
-import { Input, Option, Select } from "@mui/joy";
+import ProductSwiper from "./productSwiper";
+import { Input, Option, Select, Snackbar, SnackbarProps } from "@mui/joy";
 import { Prisma } from "@prisma/client";
 const productInclude = {
   productCategories: {
@@ -12,11 +12,11 @@ const productInclude = {
       },
     },
   },
-  prices: {
+  variants: {
     include: {
       color: true,
       size: true,
-      picturePrice: {
+      pictures: {
         select: {
           picture: {
             select: {
@@ -42,9 +42,12 @@ export default function Product({
   const [colorId, setColorId] = useState<string>("");
   const [quntity, setQuntity] = useState<number>(1);
   const [pictures, setPictures] = useState<string[]>([]);
+  const [snackColor, setSnackColor] =
+    React.useState<SnackbarProps["color"]>("success");
+  const [open, setOpen] = React.useState(false);
   const items = useMemo(
     () =>
-      product?.prices
+      product?.variants
         .filter(
           (e) =>
             colorId == "" ||
@@ -54,7 +57,7 @@ export default function Product({
             (e.sizeId == sizeId && e.colorId == colorId)
         )
         .map((e) =>
-          e.picturePrice
+          e.pictures
             .map((e) => e.picture.url)
             .map((url, index) => {
               return (
@@ -70,7 +73,43 @@ export default function Product({
         .flat(),
     [sizeId, colorId]
   );
-  const addToCardHandler=()=>{
+  const addToCartHandler = async () => {
+    const res = await fetch("/cart", {
+      method: "POST",
+      body: JSON.stringify({
+        productId: product?.id,
+        sizeId,
+        colorId,
+        quntity,
+      }),
+    });
+    if (!res.ok) {
+      setSnackColor("success");
+      setOpen(true);
+    } else {
+      setSnackColor("warning");
+      setOpen(true);
+    }
+    await new Promise(() => setTimeout(() => setOpen(false), 3000));
+  };
+  const buyHandler = async () => {
+    const res = await fetch("/cart", {
+      method: "POST",
+      body: JSON.stringify({
+        productId: product?.id,
+        sizeId,
+        colorId,
+        quntity,
+      }),
+    });
+    if (!res.ok) {
+      setSnackColor("success");
+      setOpen(true);
+    } else {
+      setSnackColor("warning");
+      setOpen(true);
+    }
+    await new Promise(() => setTimeout(() => setOpen(false), 3000));
   }
   return (
     <main className="w-full">
@@ -89,7 +128,7 @@ export default function Product({
               onClick={() => setColorId("")}
               className={`w-[50px] h-[28px] border`}
             ></span>
-            {product?.prices
+            {product?.variants
               .filter((e) => e.sizeId == sizeId || sizeId == "")
               .map((e, i) => (
                 <span
@@ -105,7 +144,7 @@ export default function Product({
             placeholder="Sizes"
           >
             <Option value={""}>All</Option>
-            {product?.prices
+            {product?.variants
               .filter((e) => e.colorId == colorId || colorId == "")
               .map((e, i) => (
                 <Option key={i} value={e.sizeId}>
@@ -123,17 +162,17 @@ export default function Product({
               slotProps={{
                 input: {
                   min: 1,
-                  max: product?.prices.find(
+                  max: product?.variants.find(
                     (e) => e.colorId == colorId && e.sizeId == sizeId
                   )?.quantity,
                 },
               }}
             />
           </div>
-          <button  className="text-main-color border border-main-color w-full py-2 hover:text-white-color hover:bg-main-color active:text-white-color active:bg-main-color">
+          <button onClick={addToCartHandler} className="text-main-color border border-main-color w-full py-2 hover:text-white-color hover:bg-main-color active:text-white-color active:bg-main-color">
             ADD TO CART
           </button>
-          <button className="text-main-color border border-main-color w-full py-2 hover:text-white-color hover:bg-main-color active:text-white-color active:bg-main-color">
+          <button  className="text-main-color border border-main-color w-full py-2 hover:text-white-color hover:bg-main-color active:text-white-color active:bg-main-color">
             BUY
           </button>
         </div>
@@ -146,6 +185,13 @@ export default function Product({
         </div>
         {/* <Flower /> */}
       </section>
+      <Snackbar
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        color={snackColor}
+        open={open}
+      >
+        I love snacks
+      </Snackbar>
     </main>
   );
 }

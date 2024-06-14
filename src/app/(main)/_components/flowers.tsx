@@ -22,7 +22,7 @@ const textVariants: Variants = {
   },
 };
 const options = {
-  prices: true,
+  variants: true,
   thumbnail: true,
   productCategories: {
     select: {
@@ -33,7 +33,7 @@ const options = {
 export default function Flowers({
   initialData,
 }: {
-  initialData: Prisma.ProductGetPayload<{ include: typeof options }>;
+  initialData: Prisma.ProductGetPayload<{ include: typeof options }>[];
 }) {
   const mainControle = useAnimation();
   const containerRef = useRef(null);
@@ -72,7 +72,7 @@ export default function Flowers({
         variants={textVariants}
         className="w-full flex justify-center"
       >
-        <Flower initialData={initialData} />
+       <Flower initialData={initialData}/>
       </motion.span>
     </motion.section>
   );

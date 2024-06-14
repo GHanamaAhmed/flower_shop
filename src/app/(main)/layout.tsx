@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Inter, DM_Sans } from "next/font/google";
-import "./globals.css";
+import { DM_Sans } from "next/font/google";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { SessionProvider } from "@/components/session/sessionProvider";
 import { options } from "@/app/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
 import MuiTheme from "@/components/muiTheme";
+import "../globals.css";
 const DMSans = DM_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: "The best flowers in the world.",
 };
 
-export default async function RootLayout({
+export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -22,15 +22,17 @@ export default async function RootLayout({
   const session = await getServerSession(options);
   return (
     <html lang="en" className="overflow-x-hidden">
-      <MuiTheme>
-        <body className={DMSans.className + " overflow-hidden"}>
-          <SessionProvider session={session}>
-            <Header />
-            {children}
-            <Footer />
-          </SessionProvider>
-        </body>
-      </MuiTheme>
+      <body className={"overflow-hidden " + DMSans.className}>
+        <div>
+          <MuiTheme>
+            <SessionProvider session={session}>
+              <Header />
+              {children}
+              <Footer />
+            </SessionProvider>
+          </MuiTheme>
+        </div>
+      </body>
     </html>
   );
 }

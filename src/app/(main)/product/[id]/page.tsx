@@ -11,11 +11,11 @@ const productInclude = {
       },
     },
   },
-  prices: {
+  variants: {
     include: {
       color: true,
       size: true,
-      picturePrice: {
+      pictures: {
         select: {
           picture: {
             select: {
