@@ -1,3 +1,4 @@
+"use client"
 import React, { useMemo, useState } from "react";
 import ProductSwiper from "./productSwiper";
 import { Input, Option, Select, Snackbar, SnackbarProps } from "@mui/joy";
