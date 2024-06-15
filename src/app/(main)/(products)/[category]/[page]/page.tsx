@@ -31,6 +31,7 @@ export default async function Page({
     <div className="w-11/12 gap-x-2 gap-y-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 justify-items-center py-5  ">
       {products.map((e, i) => (
         <FlowerCard
+        key={i}
           className="w-[200px] h-[370px] md:w-[220px] md:h-[390px]"
           name={e.name}
           price={e.variants[0].price + "$"}

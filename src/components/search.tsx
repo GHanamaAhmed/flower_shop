@@ -54,7 +54,7 @@ export default function Search({
               All
             </MenuItem>
             {categorys.map((e, i) => (
-              <MenuItem onClick={() => setCategory(e.name)}>{e.name}</MenuItem>
+              <MenuItem key={i} onClick={() => setCategory(e.name)}>{e.name}</MenuItem>
             ))}
           </Menu>
         </Dropdown>
