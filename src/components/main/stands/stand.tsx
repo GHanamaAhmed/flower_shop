@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import Swiper from "@/components/swiper";
+import Swiper from "@/components/main/swiper";
 import FlowerCard from "../flowers/flowerCard";
 import Link from "next/link";
 import { motion, useAnimation, useInView, Variants } from "framer-motion";

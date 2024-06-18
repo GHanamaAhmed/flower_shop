@@ -1,8 +1,8 @@
 "use client";
 import { Aclonica } from "next/font/google";
-import Flower from "@/components/flowers/flower";
+import Flower from "@/components/main/flowers/flower";
 import Link from "next/link";
-import Search from "@/components/search";
+import Search from "@/components/main/search";
 import { motion, useAnimation, useInView, Variants } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { Prisma, Product } from "@prisma/client";

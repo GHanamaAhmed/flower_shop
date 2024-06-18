@@ -1,4 +1,4 @@
-import Search from "@/components/search";
+import Search from "@/components/main/search";
 import { fetchCategorys } from "@/lib/api";
 import { Category } from "@prisma/client";
 import React from "react";

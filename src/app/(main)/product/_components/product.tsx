@@ -1,7 +1,14 @@
-"use client"
+"use client";
 import React, { useMemo, useState } from "react";
 import ProductSwiper from "./productSwiper";
-import { Input, Option, Select, Snackbar, SnackbarProps } from "@mui/joy";
+import {
+  Input,
+  MenuItem,
+  Select,
+  Snackbar,
+  SnackbarContent,
+  SnackbarProps,
+} from "@mui/material";
 import { Prisma } from "@prisma/client";
 const productInclude = {
   productCategories: {
@@ -111,7 +118,7 @@ export default function Product({
       setOpen(true);
     }
     await new Promise(() => setTimeout(() => setOpen(false), 3000));
-  }
+  };
   return (
     <main className="w-full">
       <section className="w-full gap-y-2 grid grid-cols-1 md:grid-cols-2 md:gap-4 md:pt-20 px-2 md:px-10">
@@ -140,17 +147,17 @@ export default function Product({
               ))}
           </div>
           <Select
-            onSelect={(e) => setSizeId(e.currentTarget.value)}
+            onChange={(e) => setSizeId(e.target.value as string)}
             className="w-full border border-main-color rounded-none"
             placeholder="Sizes"
           >
-            <Option value={""}>All</Option>
+            <MenuItem value={""}>All</MenuItem>
             {product?.variants
               .filter((e) => e.colorId == colorId || colorId == "")
               .map((e, i) => (
-                <Option key={i} value={e.sizeId}>
+                <MenuItem key={i} value={e.sizeId}>
                   {e.size.name}
-                </Option>
+                </MenuItem>
               ))}
           </Select>
           <div className="w-full flex justify-between items-center">
@@ -170,10 +177,13 @@ export default function Product({
               }}
             />
           </div>
-          <button onClick={addToCartHandler} className="text-main-color border border-main-color w-full py-2 hover:text-white-color hover:bg-main-color active:text-white-color active:bg-main-color">
+          <button
+            onClick={addToCartHandler}
+            className="text-main-color border border-main-color w-full py-2 hover:text-white-color hover:bg-main-color active:text-white-color active:bg-main-color"
+          >
             ADD TO CART
           </button>
-          <button  className="text-main-color border border-main-color w-full py-2 hover:text-white-color hover:bg-main-color active:text-white-color active:bg-main-color">
+          <button className="text-main-color border border-main-color w-full py-2 hover:text-white-color hover:bg-main-color active:text-white-color active:bg-main-color">
             BUY
           </button>
         </div>
@@ -190,9 +200,8 @@ export default function Product({
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         color={snackColor}
         open={open}
-      >
-        I love snacks
-      </Snackbar>
+        message="I love snacks"
+      />
     </main>
   );
 }

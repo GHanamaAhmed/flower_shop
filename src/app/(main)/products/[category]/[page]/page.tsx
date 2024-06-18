@@ -1,5 +1,5 @@
-import FlowerCard from "@/components/flowers/flowerCard";
-import Pagination from "@/components/pagination";
+import FlowerCard from "@/components/main/flowers/flowerCard";
+import Pagination from "@/components/main/pagination";
 import { fetchProducts } from "@/lib/api";
 import React from "react";
 import { CategoryEnum } from "../../../../../../enums/products";

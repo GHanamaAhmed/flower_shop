@@ -6,21 +6,18 @@ import { Variants, motion } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
 import {
   Avatar,
+  Badge,
   Button,
   Card,
   CardActions,
   CardContent,
-  CircularProgress,
-  Dropdown,
   IconButton,
   Menu,
-  MenuButton,
   MenuItem,
-  MenuList,
+  Popper,
   Stack,
-  SvgIcon,
   Typography,
-} from "@mui/joy";
+} from "@mui/material";
 const variants: Variants = {
   right: {
     opacity: 0,
@@ -43,6 +40,14 @@ const variants: Variants = {
 };
 export default function Header() {
   const { data: session } = useSession();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   console.log(session);
 
   return (
@@ -106,19 +111,14 @@ export default function Header() {
       >
         <motion.li variants={variants} className="hidden md:block">
           {session?.user ? (
-            // <Image
-            //   src="/icons/clarity_user-line.svg"
-            //   alt="cart"
-            //   width={20}
-            //   height={20}
-            // />
-            <Dropdown>
-              <MenuButton
-                slots={{
-                  root: IconButton,
-                }}
-                variant="plain"
-                className="hover:bg-inherit"
+            <div className="">
+              <IconButton
+                onClick={handleClick}
+                size="small"
+                sx={{ ml: 2 }}
+                aria-controls={open ? "account-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
               >
                 <Image
                   src="/icons/clarity_user-line.svg"
@@ -126,12 +126,16 @@ export default function Header() {
                   width={20}
                   height={20}
                 />
-              </MenuButton>
+              </IconButton>
               <Menu
-                placement="bottom-end"
+                onClose={handleClose}
+                id="account-menu"
+                open={open}
                 className="bg-transparent border-none"
+                transformOrigin={{ horizontal: "right", vertical: "top" }}
+                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
-                <Card variant="solid" color="warning" invertedColors>
+                <Card component={"div"} variant="elevation" color="warning">
                   <CardContent>
                     <Stack
                       direction={"row"}
@@ -141,26 +145,28 @@ export default function Header() {
                     >
                       <Avatar alt="User Photo" src={session.user.image || ""} />
                       <Stack direction={"column"}>
-                        <Typography level="body-md">
+                        <Typography variant="body2">
                           {session.user.email}
                         </Typography>
-                        <Typography level="h2">{session.user.name}</Typography>
+                        <Typography variant="h2">
+                          {session.user.name}
+                        </Typography>
                       </Stack>
                     </Stack>
                   </CardContent>
                   <CardActions>
                     <Button
-                      onClick={() => signOut()}
+                      onClick={(e) => signOut()}
                       variant="outlined"
-                      color="danger"
-                      size="sm"
+                      color="error"
+                      size="small"
                     >
                       Sign Out
                     </Button>
                   </CardActions>
                 </Card>
               </Menu>
-            </Dropdown>
+            </div>
           ) : (
             <Link
               href={"/api/auth/signin"}
@@ -179,12 +185,15 @@ export default function Header() {
           />
         </motion.li>
         <motion.li variants={variants}>
-          <Image
-            src="/icons/clarity_search-line.svg"
-            alt="search"
-            width={20}
-            height={20}
-          />
+          <Badge badgeContent={4} color="error">
+            {" "}
+            <Image
+              src="/icons/clarity_search-line.svg"
+              alt="search"
+              width={20}
+              height={20}
+            />
+          </Badge>
         </motion.li>
         <motion.li variants={variants} className="flex flex-col gap-1">
           <div className="w-5 h-0.5 bg-white"></div>

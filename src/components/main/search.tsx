@@ -1,11 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { Dropdown, Menu, MenuItem } from "@mui/joy";
-import { MenuButton } from "@mui/joy";
+import { Button, Menu, MenuItem, MenuList } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Category } from "@prisma/client";
-import { CategoryEnum } from "../../enums/products";
+import { CategoryEnum } from "../../../enums/products";
 export default function Search({
   className,
   categorys,
@@ -17,6 +16,7 @@ export default function Search({
   const Router = useRouter();
   const refSearch = React.useRef<HTMLInputElement>(null);
   const [category, setCategory] = useState<string>(CategoryEnum.products);
+  const [open, setOpen] = useState<boolean>(false);
   const createQueryString = (key: string, value: string) => {
     const search = new URLSearchParams(searchParams);
     search.set(key, value);
@@ -45,19 +45,22 @@ export default function Search({
   return (
     <div className={"flex justify-between gap-2 " + className}>
       <div className="flex items-center justify-center px-2">
-        <Dropdown>
-          <MenuButton className="relative p-0 h-5 w-5 md:h-7 md:w-7 border-none hover:bg-inherit cursor-pointer">
-            <Image fill src={"/icons/parameters.svg"} alt="paramrters" />
-          </MenuButton>
-          <Menu>
-            <MenuItem onClick={() => setCategory(CategoryEnum.products)}>
-              All
+        <Button
+          onClick={() => setOpen(!open)}
+          className="relative p-0 h-5 w-5 md:h-7 md:w-7 border-none hover:bg-inherit cursor-pointer"
+        >
+          <Image fill src={"/icons/parameters.svg"} alt="paramrters" />
+        </Button>
+        <Menu open={open}>
+          <MenuItem onClick={() => setCategory(CategoryEnum.products)}>
+            All
+          </MenuItem>
+          {categorys.map((e, i) => (
+            <MenuItem key={i} onClick={() => setCategory(e.name)}>
+              {e.name}
             </MenuItem>
-            {categorys.map((e, i) => (
-              <MenuItem key={i} onClick={() => setCategory(e.name)}>{e.name}</MenuItem>
-            ))}
-          </Menu>
-        </Dropdown>
+          ))}
+        </Menu>
       </div>
       <input
         ref={refSearch}

@@ -1,4 +1,4 @@
-import Stand from "@/components/stands/stand";
+import Stand from "@/components/main/stands/stand";
 import HeroSectoin from "./_components/heroSection";
 import Type from "./_components/type";
 import Flowers from "./_components/flowers";

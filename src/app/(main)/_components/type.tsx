@@ -1,11 +1,11 @@
 "use client";
 import Image from "next/image";
 import { Aclonica } from "next/font/google";
-import FlowerCard from "@/components/flowers/flowerCard";
-import Flower from "@/components/flowers/flower";
-import Stand from "@/components/stands/stand";
+import FlowerCard from "@/components/main/flowers/flowerCard";
+import Flower from "@/components/main/flowers/flower";
+import Stand from "@/components/main/stands/stand";
 import Link from "next/link";
-import Search from "@/components/search";
+import Search from "@/components/main/search";
 import { motion, useAnimation, useInView, Variants } from "framer-motion";
 import { useEffect, useRef } from "react";
 const AclonicaSans = Aclonica({ subsets: ["latin"], weight: "400" });
