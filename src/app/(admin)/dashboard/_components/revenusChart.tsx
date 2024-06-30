@@ -41,14 +41,19 @@ export default function RevenusChart() {
         data={data}
         options={{
           responsive: true,
+          resizeDelay: 200,
           clip: false,
           plugins: {
             legend: {
               display: false,
             },
+            tooltip: {
+              enabled: true,
+            }
           },
         }}
-        className="min-h-[200px]"
+        className="w-full md:min-h-[200px] min-w-[0px]"
+        
       />
     </div>
   );

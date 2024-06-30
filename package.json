@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate"
@@ -17,7 +17,7 @@
     "@mui/material": "^5.15.20",
     "@mui/x-charts": "^7.7.0",
     "@mui/x-date-pickers": "^7.7.0",
-    "@prisma/client": "^5.15.0",
+    "@prisma/client": "^5.12.0",
     "date-fns": "^3.6.0",
     "dotenv-cli": "^7.4.1",
     "framer-motion": "^11.0.20",
@@ -40,7 +40,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
     "postcss": "^8",
-    "prisma": "^5.15.0",
+    "prisma": "^5.12.0",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
   }

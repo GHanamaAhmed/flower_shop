@@ -23,12 +23,19 @@ export const options: NextAuthOptions = {
           id: profile.id.toString(),
           image: profile.avatar_url,
           name: profile.name || profile.login,
+          role: profile.email == "ghanamaahmed@gmail.com" ? "user" : "admin",
         };
       },
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     }),
     GoogleProvider({
+      profile(profile, tokens) {
+        return {
+          ...profile,
+          role: profile.email == "ghanamaahmed@gmail.com" ? "user" : "admin",
+        };
+      },
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),

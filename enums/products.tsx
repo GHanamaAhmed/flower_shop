@@ -3,3 +3,8 @@ export enum CategoryEnum {
   stands = "stands",
   flowers = "flowers",
 }
+export enum OrderStatusEnum {
+  success = "success",
+  returned = "returned",
+  cancelled = "cancelled",
+}

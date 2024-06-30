@@ -65,3 +65,40 @@ export async function fetchProductById<T extends Prisma.ProductInclude>(
     return null;
   }
 }
+
+type UserInclude<T> = T extends Prisma.UserInclude ? T : never;
+export async function fetchUsers<T extends Prisma.UserInclude>(
+  page: number,
+  limit: number,
+  search: string,
+  include: UserInclude<T>,
+  orderBy?: Prisma.UserOrderByWithRelationInput
+): Promise<Prisma.UserGetPayload<{ include: T }>[]> {
+  try {
+    const ofsset = (page - 1) * limit;
+    const users = await db.user.findMany({
+      include,
+      take: limit,
+      skip: ofsset,
+      where: {
+        OR: [
+          {
+            name: {
+              contains: search.trim(),
+            },
+          },
+          {
+            email: {
+              contains: search.trim(),
+            },
+          },
+        ],
+      },
+      orderBy,
+    });
+    return users as Prisma.UserGetPayload<{ include: T }>[];
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}

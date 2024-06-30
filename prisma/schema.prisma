@@ -9,8 +9,8 @@ generator client {
 
 model User {
   id            String          @id @default(auto()) @map("_id") @db.ObjectId
-  name          String?
-  email         String?         @unique
+  name          String
+  email         String         @unique
   password      String?
   emailVerified DateTime?
   role          String          @default("user")
@@ -149,6 +149,7 @@ model OrderItem {
 model Order {
   id         String      @id @default(auto()) @map("_id") @db.ObjectId
   userId     String      @db.ObjectId
+  status     String      @default("success")  // success, returned, canceled
   createdAt  DateTime    @default(now())
   orderItems OrderItem[]
   user       User        @relation(fields: [userId], references: [id], onDelete: NoAction)
@@ -165,10 +166,10 @@ model Cart {
 }
 
 model CartItem {
-  id         String @id @default(auto()) @map("_id") @db.ObjectId
-  variantId  String @db.ObjectId
-  cartId String @db.ObjectId
-  quantity   Int
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  variantId String @db.ObjectId
+  cartId    String @db.ObjectId
+  quantity  Int
 }
 
 model Picture {

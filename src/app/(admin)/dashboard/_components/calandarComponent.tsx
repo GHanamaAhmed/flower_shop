@@ -19,10 +19,11 @@ export default function CalandarComponent() {
   });
   return (
     <DateRange
-      onChange={(item) => setRanges({ ...ranges, ...item })}
+      onChange={(item: any) => setRanges({ ...ranges, ...item })}
       maxDate={new Date()}
       direction="vertical"
       ranges={[ranges.selection, ranges.compare]}
+      className="min-w-0"
     />
   );
 }

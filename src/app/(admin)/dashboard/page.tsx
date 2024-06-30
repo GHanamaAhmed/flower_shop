@@ -1,5 +1,12 @@
-import BreadcrumbsComponents from "@/components/dashboard/breadcrumbs";
-import { Box, Card, CardContent, Grid, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Container,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import PublicIcon from "@mui/icons-material/Public";
@@ -9,15 +16,15 @@ import StoreIcon from "@mui/icons-material/Store";
 import RevenusChart from "./_components/revenusChart";
 import CalandarComponent from "./_components/calandarComponent";
 import PieChartComponents from "./_components/pieChartComponents";
+import InsertInvitationIcon from "@mui/icons-material/InsertInvitation";
 export default async function page() {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   return (
-    <div className="py-4 px-3 flex-col gap-10 flex-1">
-      <BreadcrumbsComponents />
-      <div className="w-full flex flex-col gap-5 mt-16 px-8 md:ps-6 md:pe-0">
-        <Grid container spacing={4}>
-          <Grid container xs={12} md={8} spacing={4}>
-            <Grid item xs={12} md={6}>
+    <>
+      <div className="w-full flex flex-col gap-5 mt-16">
+        <Grid container gap={1}>
+          <Grid container xs={12} md={7} rowGap={4} columnGap={2}>
+            <Grid item xs={12} md={5}>
               <CustomCard
                 data="35.000"
                 duration="week"
@@ -30,7 +37,7 @@ export default async function page() {
                 title="Sales"
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={5}>
               <CustomCard
                 data="35.000"
                 duration="week"
@@ -44,7 +51,7 @@ export default async function page() {
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={5}>
               <CustomCard
                 data="35.000"
                 duration="week"
@@ -57,7 +64,7 @@ export default async function page() {
                 title="Commands"
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={5}>
               <CustomCard
                 data="35.000"
                 duration="week"
@@ -75,13 +82,9 @@ export default async function page() {
           <Grid item xs={12} md={4}>
             <Card className="overflow-visible w-full">
               <CardContent>
-                <Stack
-                  direction="row"
-                  spacing={2}
-                  justifyContent={"space-between"}
-                >
+                <Stack direction="row" gap={2} justifyContent={"space-between"}>
                   <div className="bg-gradientBlack rounded-lg p-4 -translate-y-2/3 h-fit">
-                    <AttachMoneyIcon className="fill-white stroke-white" />
+                    <InsertInvitationIcon className="fill-white stroke-white" />
                   </div>
                   <Typography
                     textAlign={"end"}
@@ -106,15 +109,24 @@ export default async function page() {
             </Card>
           </Grid>
         </Grid>
-        <Grid container justifyItems={"center"}>
-          <Grid item xs={12} md={6} >
+        <Grid
+          container
+          textAlign={"center"}
+          justifyItems={"center"}
+          justifyContent={"center"}
+          alignContent={"center"}
+          alignItems={"center"}
+        >
+          <Grid item xs={12} md={6}>
             <CalandarComponent />
           </Grid>
-          <Grid item xs={12} md={6}  alignContent={"center"}>
-            <PieChartComponents/>
+          <Grid item xs={12} md={6} textAlign={"center"}>
+            <Container className="flex justify-center">
+              <PieChartComponents />
+            </Container>
           </Grid>
         </Grid>
       </div>
-    </div>
+    </>
   );
 }
