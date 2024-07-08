@@ -10,10 +10,10 @@ generator client {
 model User {
   id            String          @id @default(auto()) @map("_id") @db.ObjectId
   name          String
-  email         String         @unique
+  email         String          @unique
   password      String?
   emailVerified DateTime?
-  role          String          @default("user")
+  role          String?
   image         String?
   accounts      Account[]
   sessions      Session[]
@@ -74,8 +74,7 @@ model Authenticator {
   credentialDeviceType String
   credentialBackedUp   Boolean
   transports           String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                 User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, credentialID])
 }
@@ -149,12 +148,11 @@ model OrderItem {
 model Order {
   id         String      @id @default(auto()) @map("_id") @db.ObjectId
   userId     String      @db.ObjectId
-  status     String      @default("success")  // success, returned, canceled
+  status     String      @default("success") // success, returned, canceled
   createdAt  DateTime    @default(now())
   orderItems OrderItem[]
   user       User        @relation(fields: [userId], references: [id], onDelete: NoAction)
   total      Int
-
   @@index([userId])
 }
 

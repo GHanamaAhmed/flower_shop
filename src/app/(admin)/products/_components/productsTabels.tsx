@@ -17,22 +17,29 @@ import Checkbox from "@mui/material/Checkbox";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
-import { UsersTableData } from "@/types/users";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { IconButton, Tooltip } from "@mui/material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import DialogComponent, { DialogContext } from "@/components/admin/dialog";
 import { NotificationContext } from "@/components/admin/notification";
 import { set } from "date-fns";
+import { ProductsTableData } from "@/types/products";
+import Image from "next/image";
 
 type Order = "asc" | "desc";
 interface HeadCell {
   disablePadding: boolean;
-  n: keyof UsersTableData;
+  n: keyof ProductsTableData;
   label: string;
   numeric: boolean;
 }
 
 const headCells: readonly HeadCell[] = [
+  {
+    n: "thumbnail",
+    numeric: false,
+    disablePadding: true,
+    label: "THUMBNAIL",
+  },
   {
     n: "name",
     numeric: false,
@@ -40,28 +47,16 @@ const headCells: readonly HeadCell[] = [
     label: "NAME",
   },
   {
-    n: "email",
+    n: "quntity",
     numeric: true,
     disablePadding: false,
-    label: "EMAIL",
+    label: "QUNTITY",
   },
   {
-    n: "purchases",
+    n: "buyers",
     numeric: true,
     disablePadding: false,
-    label: "PURCHASES",
-  },
-  {
-    n: "returned",
-    numeric: true,
-    disablePadding: false,
-    label: "RETURNED",
-  },
-  {
-    n: "amount",
-    numeric: true,
-    disablePadding: false,
-    label: "AMOUNT",
+    label: "BUYERS",
   },
 ];
 
@@ -139,11 +134,11 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-export default function UserTable({
+export default function ProductsTable({
   initilaData,
   count,
 }: {
-  initilaData: UsersTableData[];
+  initilaData: ProductsTableData[];
   count: number;
 }) {
   const searchParams = useSearchParams();
@@ -155,16 +150,14 @@ export default function UserTable({
     order: orderParams,
   } = Object.fromEntries(searchParams.entries());
   const order: Order = orderParams == "asc" ? "asc" : "desc";
-  const orderBy: keyof UsersTableData = [
-    "amount",
-    "email",
-    "n",
+  const orderBy: keyof ProductsTableData = [
     "name",
-    "purchases",
-    "returned",
+    "quntity",
+    "buyers",
+    "date",
   ].includes(orderByParams)
-    ? (orderByParams as keyof UsersTableData)
-    : "email";
+    ? (orderByParams as keyof ProductsTableData)
+    : "date";
 
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const page = Number(pageParams) || 1;
@@ -175,14 +168,14 @@ export default function UserTable({
   const dialog = React.useContext(DialogContext);
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
-    property: keyof UsersTableData
+    property: keyof ProductsTableData
   ) => {
     const isAsc = orderBy === property && order === "asc";
     const newParams = {
       orderBy: property,
       order: isAsc ? "desc" : "asc",
     };
-    router.replace(`/users?${updateQueryString(newParams)}`);
+    router.replace(`/products?${updateQueryString(newParams)}`);
   };
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -198,7 +191,7 @@ export default function UserTable({
       title: "Delete",
       text: "Are you sure do you want to remove Users?",
       onOk: async () => {
-        const res = await fetch("/api/users", {
+        const res = await fetch("/api/products", {
           method: "DELETE",
           body: JSON.stringify({
             ids: selected,
@@ -246,7 +239,7 @@ export default function UserTable({
     const newParams = {
       page: (newPage + 1).toString(),
     };
-    router.replace(`/users?${updateQueryString(newParams)}`);
+    router.replace(`/products?${updateQueryString(newParams)}`);
   };
 
   const handleChangeRowsPerPage = (
@@ -255,7 +248,7 @@ export default function UserTable({
     const newParams = {
       itemsPerPage: parseInt(event.target.value, 10).toString(),
     };
-    router.replace(`/users?${updateQueryString(newParams)}`);
+    router.replace(`/products?${updateQueryString(newParams)}`);
   };
   const updateQueryString = (params: object) => {
     const search = new URLSearchParams(searchParams);
@@ -275,6 +268,8 @@ export default function UserTable({
         <Paper sx={{ width: "100%", mb: 2 }}>
           <Toolbar
             sx={{
+              display: "flex",
+              justifyContent: "space-between",
               pl: { sm: 2 },
               pr: { xs: 1, sm: 1 },
               ...(selected.length > 0 && {
@@ -299,6 +294,15 @@ export default function UserTable({
                 </IconButton>
               </Tooltip>
             )}
+            <Tooltip title="Delete">
+              <Button
+                onClick={() => router.push("/products/product")}
+                variant="contained"
+                color="primary"
+              >
+                New Product
+              </Button>
+            </Tooltip>
           </Toolbar>
           <TableContainer>
             <Table
@@ -326,7 +330,7 @@ export default function UserTable({
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.n}
+                      key={row.id}
                       selected={isItemSelected}
                       sx={{ cursor: "pointer" }}
                     >
@@ -346,19 +350,27 @@ export default function UserTable({
                         padding="none"
                         className="text-gray"
                       >
+                        <Image
+                          src={row.thumbnail}
+                          width={50}
+                          height={50}
+                          alt=""
+                        />
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
+                        className="text-gray"
+                      >
                         {row.name}
                       </TableCell>
                       <TableCell className="text-darkBlue" align="right">
-                        {row.email}
+                        {row.quntity}
                       </TableCell>
                       <TableCell className="text-gray" align="right">
-                        {row.purchases}
-                      </TableCell>
-                      <TableCell className="text-darkBlue" align="right">
-                        {row.returned}
-                      </TableCell>
-                      <TableCell className="text-gray" align="right">
-                        {row.amount}
+                        {row.buyers}
                       </TableCell>
                     </TableRow>
                   );

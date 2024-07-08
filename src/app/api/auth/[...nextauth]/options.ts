@@ -1,43 +1,47 @@
 import { NextAuthOptions } from "next-auth";
 import GithubProvider, { GithubProfile } from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
+import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "@/lib/db";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { transporter } from "@/lib/mail";
 import EmailProvider from "next-auth/providers/email";
 import { Adapter } from "next-auth/adapters";
-import { PrismaClient } from "@prisma/client/extension";
-// const customAdapter: Adapter = (p: PrismaClient) => {
-//   return {
-//     ...PrismaAdapter(db),
-//   };
-// };
+import { UserRoles } from "@/types/users";
+
 export const options: NextAuthOptions = {
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
     GithubProvider({
-      profile(profile: GithubProfile) {
-        return {
-          ...profile,
-          id: profile.id.toString(),
-          image: profile.avatar_url,
-          name: profile.name || profile.login,
-          role: profile.email == "ghanamaahmed@gmail.com" ? "user" : "admin",
-        };
-      },
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-    }),
-    GoogleProvider({
-      profile(profile, tokens) {
+      profile(profile: GithubProfile) {
         return {
-          ...profile,
-          role: profile.email == "ghanamaahmed@gmail.com" ? "user" : "admin",
+          id: profile.id.toString(),
+          name: profile.name || profile.login,
+          email: profile.email,
+          image: profile.avatar_url,
+          role:
+            profile.email?.toLowerCase() === "ghanamaahmed@gmail.com"
+              ? UserRoles.admin
+              : UserRoles.user,
         };
       },
+    }),
+    GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      profile(profile: GoogleProfile) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+          role:
+            profile.email?.toLowerCase() === "ghanamaahmed@gmail.com"
+              ? UserRoles.admin
+              : UserRoles.user,
+        };
+      },
     }),
     // CredentialsProvider({
     //   name: "credentials",
