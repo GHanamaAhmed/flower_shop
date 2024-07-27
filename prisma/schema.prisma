@@ -87,8 +87,8 @@ model Product {
   thumbnailId       String                      @db.ObjectId
   thumbnail         Picture                     @relation(fields: [thumbnailId], references: [id], onDelete: Cascade)
   variants          ProductVariant[]
-  description       String                      @default("")
-  productCategories ProductCategoryAssignment[]
+  description       String?                     @default("")
+  productCategories ProductCategoryAssignment[] 
 }
 
 model Color {
@@ -153,6 +153,7 @@ model Order {
   orderItems OrderItem[]
   user       User        @relation(fields: [userId], references: [id], onDelete: NoAction)
   total      Int
+
   @@index([userId])
 }
 

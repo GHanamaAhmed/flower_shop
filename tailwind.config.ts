@@ -15,7 +15,7 @@ const config: Config = {
         "gray-color": "#9C9C9C",
         // Dahsboard colors
         white: "#FFFFFF",
-        gray: "#7B809A",
+        Gray: "#7B809A",
         darkBlue: "#344767",
         darkSnow: "#C7CCD0",
         snow: "#E9EAED",
