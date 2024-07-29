@@ -1,12 +1,13 @@
 import { Category, Prisma } from "@prisma/client";
 import { db } from "./db";
 type ProductInclude<T> = T extends Prisma.ProductInclude ? T : never;
+export const dynamic = "force-dynamic";
 export async function fetchProducts<T extends Prisma.ProductInclude>(
   page: number,
   limit: number,
-  search: string,
-  category: string,
-  inverse: boolean,
+  search: string | undefined,
+  category: string | undefined,
+  inverse: boolean | undefined,
   include: ProductInclude<T>
 ): Promise<Prisma.ProductGetPayload<{ include: T }>[]> {
   try {
@@ -17,12 +18,12 @@ export async function fetchProducts<T extends Prisma.ProductInclude>(
       skip: ofsset,
       where: {
         name: {
-          contains: search.trim(),
+          contains: search?.trim(),
         },
         productCategories: {
           some: {
             category: {
-              name: category.trim(),
+              name: category?.trim(),
             },
           },
         },
@@ -70,7 +71,7 @@ type UserInclude<T> = T extends Prisma.UserInclude ? T : never;
 export async function fetchUsers<T extends Prisma.UserInclude>(
   page: number,
   limit: number,
-  search: string,
+  search: string | undefined,
   include: UserInclude<T>,
   orderBy?: Prisma.UserOrderByWithRelationInput
 ): Promise<Prisma.UserGetPayload<{ include: T }>[]> {
@@ -84,12 +85,12 @@ export async function fetchUsers<T extends Prisma.UserInclude>(
         OR: [
           {
             name: {
-              contains: search.trim(),
+              contains: search?.trim(),
             },
           },
           {
             email: {
-              contains: search.trim(),
+              contains: search?.trim(),
             },
           },
         ],

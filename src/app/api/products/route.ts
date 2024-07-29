@@ -131,3 +131,46 @@ export async function POST(req: NextRequest) {
     });
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const { ids } = await req.json();
+    await db.product.deleteMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    });
+    await db.category.deleteMany({
+      where: {
+        productCategories: {
+          none: {},
+        },
+      },
+    });
+    await db.color.deleteMany({
+      where: {
+        variants: {
+          none: {},
+        },
+      },
+    });
+    await db.size.deleteMany({
+      where: {
+        variants: {
+          none: {},
+        },
+      },
+    });
+    return new NextResponse(JSON.stringify({}), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error(error);
+    return new NextResponse(undefined, {
+      status: 500,
+    });
+  }
+}

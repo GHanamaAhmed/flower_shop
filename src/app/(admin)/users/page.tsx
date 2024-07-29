@@ -45,7 +45,7 @@ export default async function Page({
   const users = await fetchUsers<typeof UserInclude>(
     Number(page) || 1,
     Number(itemsPerPage) || 5,
-    s || "",
+    s || undefined,
     UserInclude,
     orderByFn(orderBy)
   );

@@ -44,12 +44,14 @@ export default async function page({
   const products = await fetchProducts<typeof productInclude>(
     Number(page) || 1,
     Number(itemsPerPage) || 5,
-    s || "",
-    "",
+    s || undefined,
+    undefined,
     order === "asc",
     productInclude
   );
   const count = await db.product.count();
+  console.log(products);
+
   return (
     <div>
       <ProductsTable

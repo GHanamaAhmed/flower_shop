@@ -23,7 +23,7 @@ import DialogComponent, { DialogContext } from "@/components/admin/dialog";
 import { NotificationContext } from "@/components/admin/notification";
 import { set } from "date-fns";
 import { ProductsTableData } from "@/types/products";
-import Image from "next/image";
+import { CldImage } from "next-cloudinary";
 
 type Order = "asc" | "desc";
 interface HeadCell {
@@ -191,6 +191,11 @@ export default function ProductsTable({
       title: "Delete",
       text: "Are you sure do you want to remove Users?",
       onOk: async () => {
+        notification.open({
+          severityParams: "info",
+          variantParams: "outlined",
+          textParams: "Deleting User",
+        });
         const res = await fetch("/api/products", {
           method: "DELETE",
           body: JSON.stringify({
@@ -350,7 +355,7 @@ export default function ProductsTable({
                         padding="none"
                         className="text-gray"
                       >
-                        <Image
+                        <CldImage
                           src={row.thumbnail}
                           width={50}
                           height={50}

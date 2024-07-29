@@ -17,6 +17,7 @@ import { useMutation } from "react-query";
 import { CldImage, CldUploadButton, CldUploadWidget } from "next-cloudinary";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { NotificationContext } from "@/components/admin/notification";
+import { set } from "date-fns";
 export default function Page() {
   const [time, setTime] = React.useState<NodeJS.Timeout>();
   const [open, setOpen] = React.useState(false);
@@ -38,6 +39,7 @@ export default function Page() {
     }[]
   >([]);
   // temp variant
+  const [index, setIndex] = useState<number>();
   const [size, setSize] = useState<string>("");
   const [color, setColor] = useState<string>("#000000");
   const [quantity, setQuntity] = useState<number>(0);
@@ -61,7 +63,7 @@ export default function Page() {
     setOpen(true);
     if (action == "editVariant") {
       setSize("");
-      setColor("");
+      setColor("#000000");
       setQuntity(0);
       setPrice(0);
       setImages([]);
@@ -83,31 +85,48 @@ export default function Page() {
       });
       return;
     }
-    setOpen(false);
-    setVariants([
-      ...variants,
-      {
-        color,
-        size,
-        price,
-        quantity,
-        images,
-      },
-    ]);
-    setSize("");
-    setColor("");
-    setQuntity(0);
-    setPrice(0);
-    setImages([]);
+    if (action == "newVariant") {
+      setOpen(false);
+      setVariants([
+        ...variants,
+        {
+          color,
+          size,
+          price,
+          quantity,
+          images,
+        },
+      ]);
+      setSize("");
+      setColor("#000000");
+      setQuntity(0);
+      setPrice(0);
+      setImages([]);
+    } else {
+      setOpen(false);
+      setVariants((prev) => {
+        prev[index!] = {
+          color,
+          size,
+          price,
+          quantity,
+          images,
+        };
+        return prev;
+      });
+    }
   };
   const handleClose = () => {
     setOpen(false);
   };
   const handleClear = () => {
     setSize("");
-    setColor("");
+    setColor("#000000");
     setQuntity(0);
     setPrice(0);
+    if (action == "newVariant") {
+      deleteImgs(images);
+    }
     setImages([]);
   };
   const handleClearProduct = () => {
@@ -117,7 +136,7 @@ export default function Page() {
     setCategory("");
     setVariants([]);
     setSize("");
-    setColor("");
+    setColor("#000000");
     setQuntity(0);
     setPrice(0);
     setImages([]);
@@ -127,7 +146,6 @@ export default function Page() {
 
     if (
       name === "" ||
-      description === "" ||
       thumbnail === "" ||
       category === "" ||
       variants.length === 0
@@ -365,30 +383,70 @@ export default function Page() {
           rowGap={"10px"}
         >
           <Typography variant="body1">Variants</Typography>
-
-          <button
-            onClick={handleClickAddVariant}
-            className="flex flex-col items-center justify-center w-fit h-fit border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+          <Stack
+            direction={"row"}
+            paddingX={"40px"}
+            paddingY={"20px"}
+            columnGap={"10px"}
+            alignItems={"center"}
           >
-            <div className="flex flex-col items-center justify-center p-10">
-              <svg
-                className="w-8 h-8  text-gray-500 dark:text-gray-400"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 16"
+            <button
+              onClick={handleClickAddVariant}
+              className="flex flex-col items-center justify-center w-fit h-fit border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+            >
+              <div className="flex flex-col items-center justify-center p-10">
+                <svg
+                  className="w-8 h-8  text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 16"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                  />
+                </svg>
+                <p className="text-xs text-gray-500 dark:text-gray-400">ADD</p>
+              </div>
+            </button>
+            {variants.map((variant, i) => (
+              <div
+                onClick={() => {
+                  setSize(variant.size);
+                  setColor(variant.color);
+                  setQuntity(variant.quantity);
+                  setPrice(variant.price);
+                  setImages(variant.images);
+                  setAction("editVariant");
+                  setIndex(i);
+                  setOpen(true);
+                }}
+                key={i}
+                className={`bg-[${variant.color}] relative cursor-pointer w-28 h-28 flex justify-center items-center rounded-md`}
               >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                <DeleteOutlineIcon
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteImgs(variant.images);
+                    setVariants(variants.filter((e, index) => index !== i));
+                  }}
+                  className="absolute top-1 right-1 z-30 cursor-pointer"
+                  color="error"
                 />
-              </svg>
-              <p className="text-xs text-gray-500 dark:text-gray-400">ADD</p>
-            </div>
-          </button>
+                <Typography
+                  variant="body1"
+                  fontSize={"bold"}
+                  color={variant.color == "#000000" ? "white" : "black"}
+                >
+                  {variant.size}
+                </Typography>
+              </div>
+            ))}
+          </Stack>
         </Stack>
       </Stack>
       <Dialog
