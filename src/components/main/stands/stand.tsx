@@ -54,7 +54,7 @@ export default function Stand({
       <div className="w-10/12  flex justify-between">
         <motion.h1
           variants={textVariants}
-          className="text-xl md:text-2xl text-main-color"
+          className="capitalize text-xl md:text-2xl text-main-color"
         >
           Plant stands
         </motion.h1>
@@ -82,6 +82,7 @@ export default function Stand({
           items={initialData.map((e, i) => (
             <FlowerCard
               key={i}
+              id={e.id}
               className="mx-2 w-[270px] h-[370px] md:w-[300px] md:h-[400px]"
               name={e.name}
               price={e.variants[0].price + "$"}

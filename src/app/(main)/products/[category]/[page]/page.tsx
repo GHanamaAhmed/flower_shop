@@ -32,6 +32,7 @@ export default async function Page({
       {products.map((e, i) => (
         <FlowerCard
           key={i}
+          id={e.id}
           className="w-[200px] h-[370px] md:w-[220px] md:h-[390px]"
           name={e.name}
           price={e.variants[0].price + "$"}

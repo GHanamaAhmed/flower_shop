@@ -1,29 +1,30 @@
 "use client";
+import { CldImage } from "next-cloudinary";
 import React, { useState } from "react";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 
 type ThumbItemsProps = (
-  items: React.ReactNode[] | undefined,
+  items: string[],
   [setThumbIndex, setThumbAnimation]: [
     (index: number) => void,
     (animate: boolean) => void
   ]
 ) => JSX.Element[] | undefined;
 type ProductSwiperProps = {
-  items: JSX.Element[] | undefined;
+  items: string[];
 };
 const thumbItems: ThumbItemsProps = (
   items,
   [setThumbIndex, setThumbAnimation]
 ) => {
-  return items?.map((item: React.ReactNode, i: number) => (
+  return items?.map((url: string, i: number) => (
     <div
       key={i}
-      className="thumb w-20 h-20 md:h-32 md:w-32 mx-3 flex border justify-center items-center "
+      className="thumb w-20 h-20 md:h-32 md:w-32 mx-3 flex border relative justify-center items-center "
       onClick={() => (setThumbIndex(i), setThumbAnimation(true))}
     >
-      {item}
+      <CldImage className="object-cover" fill src={url} alt={`${i}`} />
     </div>
   ));
 };
@@ -72,7 +73,17 @@ export default function ProductSwiper({ items }: ProductSwiperProps) {
       disableDotsControls
       autoHeight
       disableButtonsControls
-      items={items}
+      items={items?.map((url, i) => (
+        <div className="w-full flex justify-center items-center">
+          <CldImage
+            className="object-cover min-h-80 md:w-7/12 h-auto"
+            src={url}
+            alt={`${i}`}
+            width={500}
+            height={500}
+          />
+        </div>
+      ))}
       mouseTracking={!thumbAnimation}
       onSlideChange={syncMainBeforeChange}
       onSlideChanged={syncMainAfterChange}

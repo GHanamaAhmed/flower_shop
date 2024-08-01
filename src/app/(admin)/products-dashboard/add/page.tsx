@@ -56,7 +56,11 @@ export default function Page() {
       await fetch("/api/products/categories?name=" + name).then((res) =>
         res.json()
       ),
-    onSuccess: (data) => setCategorys(data),
+    onSuccess: (data) => {
+      console.log("success", data);
+
+      setCategorys(data);
+    },
   });
   // functions
   const handleClickAddVariant = () => {
@@ -198,23 +202,6 @@ export default function Page() {
         });
       });
   };
-  const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target?.files?.[0];
-    // const formData = new FormData();
-    // formData.append("img", file as File);
-    // fetch("/api/products", {
-    //   method: "POST",
-    //   body: formData,
-    // });
-
-    // if (file) {
-    //   const reader = new FileReader();
-    //   reader.readAsDataURL(file);
-    //   reader.onload = () => {
-    //     setThumbnail(reader.result as string);
-    //   };
-    // }
-  };
   const deleteImgs = async (imagesDeleted: string[]) => {
     await fetch("/api/cloudinary", {
       method: "DELETE",
@@ -275,17 +262,21 @@ export default function Page() {
               value={category}
               options={categorys}
               loading={isLoading}
+              onChange={(_, value) => {
+                setCategory(value || "");
+              }}
               renderInput={(params) => (
                 <TextField
-                  onFocus={() => fetchCategory(name)}
+                  onFocus={() => fetchCategory(category)}
                   onChange={(e) => {
-                    setCategory(e.currentTarget.value);
+                    const value = e.currentTarget.value;
+                    setCategory(value);
                     if (time) {
                       clearTimeout(time);
                     }
                     setTime(
                       setTimeout(() => {
-                        fetchCategory(e.target.value);
+                        fetchCategory(value);
                       }, 1000)
                     );
                   }}

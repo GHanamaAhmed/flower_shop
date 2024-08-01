@@ -4,7 +4,9 @@ import Image from "next/image";
 import { HtmlProps } from "next/dist/shared/lib/html-context.shared-runtime";
 import type { ImageProps } from "next/dist/shared/lib/get-img-props";
 import Link from "next/link";
+import { CldImage, CldOgImage } from "next-cloudinary";
 type FlowerCardProps = {
+  id: string;
   imgProps?: ImageProps;
   name?: string;
   price?: string;
@@ -12,6 +14,7 @@ type FlowerCardProps = {
   className?: string;
 };
 export default function FlowerCard({
+  id,
   imgProps,
   name,
   price,
@@ -21,12 +24,12 @@ export default function FlowerCard({
   const handleDragStart = (e: any) => e.preventDefault();
   return (
     <Link
-      href={"/product/1"}
+      href={"/product/" + id}
       onDragStart={handleDragStart}
       className={"flex flex-col gap-1 " + className}
     >
       <div className="w-full relative flex-1">
-        <Image src={""} alt="" {...imgProps} />
+        <CldImage {...imgProps} />
       </div>
       {(name || price) && (
         <div className="w-full grid grid-cols-10">

@@ -32,8 +32,10 @@ const options = {
 };
 export default function Flowers({
   initialData,
+  category
 }: {
   initialData: Prisma.ProductGetPayload<{ include: typeof options }>[];
+  category:string
 }) {
   const mainControle = useAnimation();
   const containerRef = useRef(null);
@@ -54,9 +56,9 @@ export default function Flowers({
       <div className="w-10/12  flex justify-between">
         <motion.h1
           variants={textVariants}
-          className="text-xl md:text-2xl text-main-color"
+          className="capitalize text-xl md:text-2xl text-main-color"
         >
-          Flowers
+          {category}
         </motion.h1>
         <motion.span variants={textVariants}>
           <Link href={"/flowers/1"}>view all</Link>

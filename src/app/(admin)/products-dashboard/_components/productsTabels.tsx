@@ -24,7 +24,7 @@ import { NotificationContext } from "@/components/admin/notification";
 import { set } from "date-fns";
 import { ProductsTableData } from "@/types/products";
 import { CldImage } from "next-cloudinary";
-
+import EditIcon from "@mui/icons-material/Edit";
 type Order = "asc" | "desc";
 interface HeadCell {
   disablePadding: boolean;
@@ -301,7 +301,7 @@ export default function ProductsTable({
             )}
             <Tooltip title="Delete">
               <Button
-                onClick={() => router.push("/products/product")}
+                onClick={() => router.push("/products-dashboard/add")}
                 variant="contained"
                 color="primary"
               >
@@ -376,6 +376,14 @@ export default function ProductsTable({
                       </TableCell>
                       <TableCell className="text-gray" align="right">
                         {row.buyers}
+                      </TableCell>
+                      <TableCell align="right">
+                        <EditIcon
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            router.push("/products-dashboard/edit/" + row.id);
+                          }}
+                        />
                       </TableCell>
                     </TableRow>
                   );

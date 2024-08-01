@@ -2,11 +2,12 @@
 import React, { useMemo, useState } from "react";
 import ProductSwiper from "./productSwiper";
 import {
+  FormControl,
   Input,
+  InputLabel,
   MenuItem,
   Select,
   Snackbar,
-  SnackbarContent,
   SnackbarProps,
 } from "@mui/material";
 import { Prisma } from "@prisma/client";
@@ -64,20 +65,7 @@ export default function Product({
             (e.sizeId == sizeId && colorId == "") ||
             (e.sizeId == sizeId && e.colorId == colorId)
         )
-        .map((e) =>
-          e.pictures
-            .map((e) => e.picture.url)
-            .map((url, index) => {
-              return (
-                <div
-                  key={index}
-                  className="item w-full min-h-80 md:w-[517px] md:h-[517px] relative flex justify-center items-center"
-                >
-                  <img className="object-cover" src={url} alt={`${index}`} />
-                </div>
-              );
-            })
-        )
+        .map((e) => e.pictures.map((e) => e.picture.url))
         .flat(),
     [sizeId, colorId]
   );
@@ -122,8 +110,8 @@ export default function Product({
   return (
     <main className="w-full">
       <section className="w-full gap-y-2 grid grid-cols-1 md:grid-cols-2 md:gap-4 md:pt-20 px-2 md:px-10">
-        <div>
-          <ProductSwiper items={items} />
+        <div className="justify-center items-center">
+          <ProductSwiper items={items || []} />
         </div>
         <div className="flex flex-col gap-3">
           <h1 className="text-xl md:text-2xl text-main-color">
@@ -142,24 +130,31 @@ export default function Product({
                 <span
                   key={i}
                   onClick={() => setColorId(e.colorId)}
-                  className={`w-[50px] h-[28px] bg-[${e.color.name}]`}
+                  className={`w-[50px] h-[28px]`}
+                  style={{
+                    backgroundColor: e.color.name,
+                  }}
                 ></span>
               ))}
           </div>
-          <Select
-            onChange={(e) => setSizeId(e.target.value as string)}
-            className="w-full border border-main-color rounded-none"
-            placeholder="Sizes"
-          >
-            <MenuItem value={""}>All</MenuItem>
-            {product?.variants
-              .filter((e) => e.colorId == colorId || colorId == "")
-              .map((e, i) => (
-                <MenuItem key={i} value={e.sizeId}>
-                  {e.size.name}
-                </MenuItem>
-              ))}
-          </Select>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Size</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              onChange={(e) => setSizeId(e.target.value as string)}
+              className="w-full border-main-color"
+              label="Size"
+            >
+              <MenuItem value={""}>All</MenuItem>
+              {product?.variants
+                .filter((e) => e.colorId == colorId || colorId == "")
+                .map((e, i) => (
+                  <MenuItem key={i} value={e.sizeId}>
+                    {e.size.name}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
           <div className="w-full flex justify-between items-center">
             <p className="font-semibold">Quntity</p>
             <Input

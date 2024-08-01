@@ -26,27 +26,32 @@ const pages = [
   {
     title: "Dashboard",
     icon: <DashboardIcon className="fill-white" />,
+    path: "dashboard",
   },
   {
     title: "Users",
     icon: <GroupIcon className="fill-white" />,
+    path: "users",
   },
   {
     title: "Orders",
     icon: <WorkHistoryIcon className="fill-white" />,
+    path: "orders",
   },
   {
     title: "Products",
     icon: <StoreIcon className="fill-white" />,
+    path: "products-dashboard",
   },
   {
     title: "Payments",
     icon: <PaymentIcon className="fill-white" />,
+    path: "payments",
   },
 ];
 const variants: Variants = {
-  hidden: { x: "-100%",opacity:0 },
-  visible: { x: 0,opacity:1 },
+  hidden: { x: "-100%", opacity: 0 },
+  visible: { x: 0, opacity: 1 },
 };
 
 function Sidebar() {
@@ -57,7 +62,9 @@ function Sidebar() {
   return (
     <motion.div
       variants={variants}
-      animate={isOpen||global.window?.innerWidth>=1024 ? "visible" : "hidden"}
+      animate={
+        isOpen || global.window?.innerWidth >= 1024 ? "visible" : "hidden"
+      }
       transition={{ duration: 1 }}
       className={`bg-gradientBlack  md:translate-x-0 lg:flex flex-col gap-4 p-4 rounded-lg h-[calc(100vh-12px)] m-2 w-fit text-white lg:static absolute top-2 left-2 z-50`}
     >
@@ -84,7 +91,7 @@ function Sidebar() {
           return (
             <ListItemButton
               key={page.title}
-              onClick={() => router.push(`/${page.title.toLowerCase()}`)}
+              onClick={() => router.push(`/${page.path}`)}
               className={`overflow-hidden rounded-md hover:bg-darkMud my-1 ${
                 isCurrentPath ? "bg-gradientBlue" : ""
               }`}

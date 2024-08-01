@@ -2,7 +2,7 @@ import Stand from "@/components/main/stands/stand";
 import HeroSectoin from "./_components/heroSection";
 import Type from "./_components/type";
 import Flowers from "./_components/flowers";
-import { fetchProducts } from "@/lib/api";
+import { fetchCategorys, fetchProducts } from "@/lib/api";
 const options = {
   variants: true,
   thumbnail: true,
@@ -13,28 +13,30 @@ const options = {
   },
 };
 export default async function Home() {
-  const flowers = await fetchProducts<typeof options>(
-    1,
-    10,
-    "",
-    "flower",
-    false,
-    options
-  );
-  const stands = await fetchProducts<typeof options>(
-    1,
-    10,
-    "",
-    "stand",
-    false,
-    options
+  const categories = await fetchCategorys();
+  const productsByCategories = await Promise.all(
+    categories.map(async ({ name }) => ({
+      category: name,
+      products: await fetchProducts<typeof options>(
+        1,
+        10,
+        "",
+        name,
+        false,
+        options
+      ),
+    }))
   );
   return (
     <main>
       <HeroSectoin />
       <Type />
-      <Flowers initialData={flowers} />
-      <Stand initialData={stands} />
+      {productsByCategories.map(({ category, products }) => {
+        if (category.toLocaleLowerCase().includes("stand")) {
+          return <Stand initialData={products} />;
+        }
+        return <Flowers initialData={products} category={category} />;
+      })}
     </main>
   );
 }
