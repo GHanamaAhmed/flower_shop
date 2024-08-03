@@ -8,6 +8,7 @@ type HandleNotificationProps = {
   severityParams: "success" | "error" | "warning" | "info" | undefined;
   variantParams: "filled" | "outlined" | "standard" | undefined;
   textParams: string;
+  autoHideDuration?: number | null | undefined;
 };
 export const NotificationContext = createContext<{
   open: ({
@@ -27,6 +28,8 @@ export default function NotificationProvider({ children }: NotificationProps) {
     useState<HandleNotificationProps["variantParams"]>(undefined);
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
+  const [autoHideDuration, setAutoHideDuration] =
+    useState<HandleNotificationProps["autoHideDuration"]>(6000);
   const handleCancle = () => {
     setOpen(false);
   };
@@ -34,15 +37,21 @@ export default function NotificationProvider({ children }: NotificationProps) {
     severityParams,
     variantParams,
     textParams,
+    autoHideDuration,
   }: HandleNotificationProps) => {
     setSeverity(severityParams);
     setVariant(variantParams);
     setText(textParams);
     setOpen(true);
+    setAutoHideDuration(autoHideDuration);
   };
   return (
     <>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleCancle}>
+      <Snackbar
+        open={open}
+        autoHideDuration={autoHideDuration}
+        onClose={handleCancle}
+      >
         <Alert
           onClose={handleCancle}
           severity={severity}

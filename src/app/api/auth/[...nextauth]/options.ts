@@ -7,6 +7,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import EmailProvider from "next-auth/providers/email";
 import { Adapter } from "next-auth/adapters";
 import { UserRoles } from "@/types/users";
+import { User } from "@prisma/client";
 
 export const options: NextAuthOptions = {
   adapter: PrismaAdapter(db) as Adapter,
@@ -78,14 +79,8 @@ export const options: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      session.user.id = token?.id as string;
+    async session({ session, user }) {
+      session.user.id = (user as User).id;
       return session;
     },
     redirect(params) {

@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import ProductSwiper from "./productSwiper";
 import {
   FormControl,
@@ -7,10 +7,10 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Snackbar,
   SnackbarProps,
 } from "@mui/material";
 import { Prisma } from "@prisma/client";
+import { NotificationContext } from "@/components/admin/notification";
 const productInclude = {
   productCategories: {
     include: {
@@ -49,11 +49,10 @@ export default function Product({
 }) {
   const [sizeId, setSizeId] = useState<string>("");
   const [colorId, setColorId] = useState<string>("");
-  const [quntity, setQuntity] = useState<number>(1);
+  const [quantity, setQuantity] = useState<number>(1);
   const [pictures, setPictures] = useState<string[]>([]);
-  const [snackColor, setSnackColor] =
-    React.useState<SnackbarProps["color"]>("success");
-  const [open, setOpen] = React.useState(false);
+  React.useState<SnackbarProps["color"]>("success");
+  const notification = useContext(NotificationContext);
   const items = useMemo(
     () =>
       product?.variants
@@ -70,23 +69,30 @@ export default function Product({
     [sizeId, colorId]
   );
   const addToCartHandler = async () => {
-    const res = await fetch("/cart", {
+    const res = await fetch("/api/cart", {
       method: "POST",
       body: JSON.stringify({
         productId: product?.id,
         sizeId,
         colorId,
-        quntity,
+        quantity,
       }),
+      credentials: "include",
     });
-    if (!res.ok) {
-      setSnackColor("success");
-      setOpen(true);
+    if (res.ok) {
+      notification.open({
+        severityParams: "success",
+        textParams: "Prudact Has Added In The Cart",
+        variantParams: "filled",
+      });
     } else {
-      setSnackColor("warning");
-      setOpen(true);
+      const { error } = await res.json();
+      notification.open({
+        severityParams: "warning",
+        textParams: error ? error : "Someting Is Wrong",
+        variantParams: "filled",
+      });
     }
-    await new Promise(() => setTimeout(() => setOpen(false), 3000));
   };
   const buyHandler = async () => {
     const res = await fetch("/cart", {
@@ -95,7 +101,7 @@ export default function Product({
         productId: product?.id,
         sizeId,
         colorId,
-        quntity,
+        quantity,
       }),
     });
     if (!res.ok) {
@@ -130,7 +136,9 @@ export default function Product({
                 <span
                   key={i}
                   onClick={() => setColorId(e.colorId)}
-                  className={`w-[50px] h-[28px]`}
+                  className={`w-[50px] h-[28px] cursor-pointer ${
+                    colorId == e.colorId ? "border-2" : ""
+                  }`}
                   style={{
                     backgroundColor: e.color.name,
                   }}
@@ -156,12 +164,12 @@ export default function Product({
             </Select>
           </FormControl>
           <div className="w-full flex justify-between items-center">
-            <p className="font-semibold">Quntity</p>
+            <p className="font-semibold">Quantity</p>
             <Input
               type="number"
               className="rounded-none border border-main-color"
               defaultValue={1}
-              onChange={(e) => setQuntity(+e.currentTarget.value)}
+              onChange={(e) => setQuantity(+e.currentTarget.value)}
               slotProps={{
                 input: {
                   min: 1,
@@ -191,12 +199,6 @@ export default function Product({
         </div>
         {/* <Flower /> */}
       </section>
-      <Snackbar
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-        color={snackColor}
-        open={open}
-        message="I love snacks"
-      />
     </main>
   );
 }

@@ -9,72 +9,125 @@ type CheckoutRequest = {
   quantity: number;
 };
 export async function POST(req: NextRequest) {
-  const { colorId, productId, quantity, sizeId }: CheckoutRequest =
-    await req.json();
-  // add product to user checkout
-  const session = await getServerSession(options);
-  const globalSession = req.cookies.get("connect.sid")?.value || "";
-  // check if product exists
-  const product = await db.product.findUnique({
-    where: {
-      id: productId,
-    },
-    select: {
-      variants: {
-        where: {
-          sizeId,
-          colorId,
-          quantity: {
-            gte: quantity,
+  try {
+    const { colorId, productId, quantity, sizeId }: CheckoutRequest =
+      await req.json();
+    // add product to user checkout
+    const session = await getServerSession(options);
+    const sessionToken =
+      req.cookies.get("next-auth.session-token")?.value || "";
+    if (!session && !sessionToken) {
+      return NextResponse.json({}, { status: 401 });
+    }
+    // check if product exists
+    const product = await db.product.findUnique({
+      where: {
+        id: productId,
+      },
+      select: {
+        variants: {
+          where: {
+            sizeId,
+            colorId,
+            quantity: {
+              gte: quantity,
+            },
           },
         },
       },
-    },
-  });
-  if (!product) {
-    return NextResponse.json({ error: "Product not found" }, { status: 404 });
-  }
-  if (!product?.variants.length) {
-    return NextResponse.json(
-      { error: "the color or size out of stock" },
-      { status: 404 }
-    );
-  }
-  // check if user has a checkout
-  const query = session?.user
-    ? {
-        userId: session.user.id,
-      }
-    : {
-        session: globalSession,
-      };
-  let checkout = await db.cart.findUnique({
-    where: query,
-  });
-  if (!checkout) {
-    checkout = await db.cart.create({
+    });
+    if (!product) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+    if (!product?.variants.length) {
+      return NextResponse.json(
+        { error: "the color or size out of stock" },
+        { status: 404 }
+      );
+    }
+    // check if user has a checkout
+    const query = session?.user
+      ? {
+          userId: session.user.id,
+          sessionToken: sessionToken,
+        }
+      : {
+          sessionToken: sessionToken,
+        };
+    let cart = await db.cart.findUnique({
+      where: query,
+    });
+    if (!cart) {
+      cart = await db.cart.create({
+        data: {
+          ...query,
+          sessionToken: sessionToken,
+        },
+      });
+    }
+    // add product to Cart
+    await db.cartItem.create({
       data: {
-        ...query,
-        session: globalSession,
+        cartId: cart.id,
+        variantId: product.variants[0].id,
+        quantity,
+      },
+    });
+    product.variants[0].quantity -= quantity;
+    await db.productVariant.update({
+      where: {
+        id: product.variants[0].id,
+      },
+      data: {
+        quantity: product.variants[0].quantity,
+      },
+    });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error(error);
+    return new NextResponse(JSON.stringify({}), {
+      status: 400,
+      headers: {
+        "Content-Type": "application/json",
       },
     });
   }
-  // add product to checkout
-  await db.cartItem.create({
-    data: {
-      cartId: checkout.id,
-      variantId: product.variants[0].id,
-      quantity,
-    },
-  });
-  product.variants[0].quantity -= quantity;
-  await db.productVariant.update({
-    where: {
-      id: product.variants[0].id,
-    },
-    data: {
-      quantity: product.variants[0].quantity,
-    },
-  });
-  return NextResponse.json({ success: true });
+}
+export async function GET(req: NextRequest) {
+  try {
+    const session = await getServerSession(options);
+    const sessionToken =
+      req.cookies.get("next-auth.session-token")?.value || "";
+    if (!session && !sessionToken) {
+      return NextResponse.json({}, { status: 401 });
+    }
+    const query = session?.user
+      ? {
+          userId: session.user.id,
+        }
+      : {
+          sessionToken,
+        };
+
+    const cart = await db.cart.findUnique({
+      where: query,
+      include: {
+        cartItem: true, // Include related cart items
+      },
+    });
+    console.log(cart);
+
+    return NextResponse.json(cart);
+  } catch (error) {
+    console.error(error);
+    return new NextResponse(
+      JSON.stringify({ error: "Internal Server Error" }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
 }

@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Variants, motion } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
 import {
@@ -18,6 +18,9 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useQuery } from "react-query";
+import { NotificationContext } from "../admin/notification";
+import { Prisma } from "@prisma/client";
 const variants: Variants = {
   right: {
     opacity: 0,
@@ -42,6 +45,34 @@ export default function Header() {
   const { data: session } = useSession();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const notification = useContext(NotificationContext);
+  const [cartItems, setCartItems] = useState<Prisma.CartItemGetPayload<{}>[]>(
+    []
+  );
+  // const {} = useQuery({
+  //   queryKey: ["cart"],
+  //   queryFn: async () => {
+  //     const res = await fetch("/api/cart", {
+  //       method: "GET",
+  //       credentials: "include",
+  //     });
+
+  //     if (!res.ok) {
+  //       notification.open({
+  //         severityParams: "error",
+  //         textParams: res.statusText,
+  //         variantParams: "filled",
+  //       });
+  //     } else {
+  //       const {
+  //         cart,
+  //       }: {
+  //         cart: Prisma.CartGetPayload<{ include: { cartItem: true } }> | null;
+  //       } = await res.json();
+  //       setCartItems(cart?.cartItem || []);
+  //     }
+  //   },
+  // });
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -177,23 +208,23 @@ export default function Header() {
           )}
         </motion.li>
         <motion.li variants={variants}>
-          <Image
-            src="/icons/clarity_shopping-cart-line.svg"
-            alt="cart"
-            width={20}
-            height={20}
-          />
-        </motion.li>
-        <motion.li variants={variants}>
-          <Badge badgeContent={4} color="error">
-            {" "}
+          <Badge badgeContent={cartItems?.length} color="error">
             <Image
-              src="/icons/clarity_search-line.svg"
-              alt="search"
+              src="/icons/clarity_shopping-cart-line.svg"
+              alt="cart"
               width={20}
               height={20}
             />
           </Badge>
+        </motion.li>
+        <motion.li variants={variants}>
+          {" "}
+          <Image
+            src="/icons/clarity_search-line.svg"
+            alt="search"
+            width={20}
+            height={20}
+          />
         </motion.li>
         <motion.li variants={variants} className="flex flex-col gap-1">
           <div className="w-5 h-0.5 bg-white"></div>
