@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { Prisma } from "@prisma/client";
 import { NotificationContext } from "@/components/admin/notification";
+import { useQueryClient } from "react-query";
 const productInclude = {
   productCategories: {
     include: {
@@ -51,8 +52,8 @@ export default function Product({
   const [colorId, setColorId] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
   const [pictures, setPictures] = useState<string[]>([]);
-  React.useState<SnackbarProps["color"]>("success");
   const notification = useContext(NotificationContext);
+  const queryClient = useQueryClient();
   const items = useMemo(
     () =>
       product?.variants
@@ -69,6 +70,19 @@ export default function Product({
     [sizeId, colorId]
   );
   const addToCartHandler = async () => {
+    if (!sizeId || !colorId || !quantity) {
+      notification.open({
+        severityParams: "warning",
+        textParams: "Please Select Size, Color And Quantity",
+        variantParams: "filled",
+      });
+      return;
+    }
+    notification.open({
+      severityParams: "info",
+      textParams: "waiting",
+      variantParams: "outlined",
+    });
     const res = await fetch("/api/cart", {
       method: "POST",
       body: JSON.stringify({
@@ -80,16 +94,18 @@ export default function Product({
       credentials: "include",
     });
     if (res.ok) {
+      queryClient.invalidateQueries("cart");
       notification.open({
         severityParams: "success",
         textParams: "Prudact Has Added In The Cart",
         variantParams: "filled",
       });
     } else {
-      const { error } = await res.json();
+      const error = await res.json();
+      console.error(error);
       notification.open({
         severityParams: "warning",
-        textParams: error ? error : "Someting Is Wrong",
+        textParams: "Someting Is Wrong",
         variantParams: "filled",
       });
     }
@@ -105,13 +121,8 @@ export default function Product({
       }),
     });
     if (!res.ok) {
-      setSnackColor("success");
-      setOpen(true);
     } else {
-      setSnackColor("warning");
-      setOpen(true);
     }
-    await new Promise(() => setTimeout(() => setOpen(false), 3000));
   };
   return (
     <main className="w-full">

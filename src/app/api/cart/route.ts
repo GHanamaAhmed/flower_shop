@@ -37,13 +37,12 @@ export async function POST(req: NextRequest) {
       },
     });
     if (!product) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+      return new NextResponse("Product not found", { status: 404 });
     }
     if (!product?.variants.length) {
-      return NextResponse.json(
-        { error: "the color or size out of stock" },
-        { status: 404 }
-      );
+      return new NextResponse("the color or size out of stock", {
+        status: 404,
+      });
     }
     // check if user has a checkout
     const query = session?.user
@@ -85,7 +84,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error(error);
-    return new NextResponse(JSON.stringify({}), {
+    return new NextResponse(JSON.stringify(error), {
       status: 400,
       headers: {
         "Content-Type": "application/json",
@@ -116,8 +115,7 @@ export async function GET(req: NextRequest) {
       },
     });
     console.log(cart);
-
-    return NextResponse.json(cart);
+    return NextResponse.json({ cart });
   } catch (error) {
     console.error(error);
     return new NextResponse(

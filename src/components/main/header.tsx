@@ -49,38 +49,36 @@ export default function Header() {
   const [cartItems, setCartItems] = useState<Prisma.CartItemGetPayload<{}>[]>(
     []
   );
-  // const {} = useQuery({
-  //   queryKey: ["cart"],
-  //   queryFn: async () => {
-  //     const res = await fetch("/api/cart", {
-  //       method: "GET",
-  //       credentials: "include",
-  //     });
+  const {} = useQuery({
+    queryKey: ["cart"],
+    queryFn: async () => {
+      const res = await fetch("/api/cart", {
+        method: "GET",
+        credentials: "include",
+      });
 
-  //     if (!res.ok) {
-  //       notification.open({
-  //         severityParams: "error",
-  //         textParams: res.statusText,
-  //         variantParams: "filled",
-  //       });
-  //     } else {
-  //       const {
-  //         cart,
-  //       }: {
-  //         cart: Prisma.CartGetPayload<{ include: { cartItem: true } }> | null;
-  //       } = await res.json();
-  //       setCartItems(cart?.cartItem || []);
-  //     }
-  //   },
-  // });
+      if (!res.ok) {
+        notification.open({
+          severityParams: "error",
+          textParams: res.statusText,
+          variantParams: "filled",
+        });
+      } else {
+        const {
+          cart,
+        }: {
+          cart: Prisma.CartGetPayload<{ include: { cartItem: true } }> | null;
+        } = await res.json();
+        setCartItems(cart?.cartItem || []);
+      }
+    },
+  });
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
-  console.log(session);
-
   return (
     <motion.header className="bg-main-color text-white flex items-center justify-around py-5">
       <motion.span
@@ -208,7 +206,7 @@ export default function Header() {
           )}
         </motion.li>
         <motion.li variants={variants}>
-          <Badge badgeContent={cartItems?.length} color="error">
+          <Badge badgeContent={cartItems?.length + ""} color="error">
             <Image
               src="/icons/clarity_shopping-cart-line.svg"
               alt="cart"
